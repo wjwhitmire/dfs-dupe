@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Heuristic estimate of how many entries share your NFL Classic DFS lineup, and the tie-split payout impact. Runs in your browser.">
+<style>
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Lineup Dupe Check</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Manrope:wght@400;600&family=Share+Tech+Mono&display=swap">
+<style>
+/* Field Tools design system v3, No. 13: "Contest entry ticket". Light: ticket roll stock. Dark: the season pass card, violet stock with silver foil. */
+:root {
+  --bg: #d5dbee; --surface: #fbfbfe; --surface-2: #e8ebf8; --hair: #c9cfe6; --line: #646b8a;
+  --fg: #171a2b; --muted: #474d68; --accent: #3a2a96; --accent-ink: #ffffff; --mark: #c0162f;
+  --good: #1b6634; --warn: #7f4f00; --bad: #a01425; --field: #ffffff;
+  --chart-1: #3a2a96; --chart-2: #c0162f; --chart-3: #171a2b; --chart-4: #0b7285; --chart-grid: #dde1f0;
+  --display: "Bungee", Impact, "Arial Black", "DejaVu Sans", sans-serif;
+  --body: "Manrope", "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif;
+  --mono: "Share Tech Mono", ui-monospace, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #150f26; --surface: #211936; --surface-2: #2b2244; --hair: #3a305a; --line: #8b80b0;
+  --fg: #efecf7; --muted: #bdb5d6; --accent: #d4d0e4; --accent-ink: #1a1430; --mark: #ff7088;
+  --good: #7fd8a0; --warn: #f2c063; --bad: #ffa38a; --field: #1b1430;
+  --chart-1: #d4d0e4; --chart-2: #ff7088; --chart-3: #9cc2ff; --chart-4: #74d8e4; --chart-grid: #322a4f;
+  --display: "Bungee", Impact, "Arial Black", "DejaVu Sans", sans-serif;
+  --body: "Manrope", "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif;
+  --mono: "Share Tech Mono", ui-monospace, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #150f26; --surface: #211936; --surface-2: #2b2244; --hair: #3a305a; --line: #8b80b0;
+  --fg: #efecf7; --muted: #bdb5d6; --accent: #d4d0e4; --accent-ink: #1a1430; --mark: #ff7088;
+  --good: #7fd8a0; --warn: #f2c063; --bad: #ffa38a; --field: #1b1430;
+  --chart-1: #d4d0e4; --chart-2: #ff7088; --chart-3: #9cc2ff; --chart-4: #74d8e4; --chart-grid: #322a4f;
+  --display: "Bungee", Impact, "Arial Black", "DejaVu Sans", sans-serif;
+  --body: "Manrope", "Segoe UI", "Helvetica Neue", Arial, "DejaVu Sans", sans-serif;
+  --mono: "Share Tech Mono", ui-monospace, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; color: var(--fg); font-family: var(--body); font-size: 16px; line-height: 1.5; background: var(--bg); }
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 40px;
+}
+
+/* Signature: the entry ticket. Notched corners cut from roll stock, a perforated stub with the serial. */
+.sheet-head { margin-bottom: 18px; }
+.tkt {
+  display: flex; margin: 0 0 12px;
+  background:
+    radial-gradient(circle at 0 0, var(--bg) 10px, transparent 10.5px),
+    radial-gradient(circle at 100% 0, var(--bg) 10px, transparent 10.5px),
+    radial-gradient(circle at 0 100%, var(--bg) 10px, transparent 10.5px),
+    radial-gradient(circle at 100% 100%, var(--bg) 10px, transparent 10.5px),
+    var(--surface);
+}
+.tkt .main { flex: 1; min-width: 0; padding: 16px 18px 14px; }
+.adm { margin: 0; font-family: var(--mono); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.tkt .terms { margin: 6px 0 0; font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 5vw, 2.4rem); line-height: 1.1; color: var(--accent); margin: 4px 0 0; overflow-wrap: anywhere; }
+.stub {
+  writing-mode: vertical-rl; font-family: var(--mono); font-size: 14px; letter-spacing: .12em; color: var(--mark);
+  border-left: 2px dashed var(--line); padding: 14px 10px; text-align: center; white-space: nowrap;
+}
+.lede { margin: 0; color: var(--muted); max-width: 64ch; }
+h2, h3, summary { font-family: var(--display); font-weight: 400; line-height: 1.15; letter-spacing: .01em; }
+h2 { font-size: 1.3rem; margin: 0 0 12px; color: var(--accent); }
+h3 { font-size: 1.02rem; margin: 0 0 8px; }
+
+/* Panels: lengths of ticket stock, torn at the perforation along the top. */
+.panel { background: var(--surface); border-top: 2px dashed var(--line); padding: 16px; margin-bottom: 16px; min-width: 0; }
+@media (min-width: 700px) { .panel { padding: 20px 22px; } }
+
+/* Fields */
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.field label, .lbl, legend { font-size: 15px; font-weight: 600; color: var(--fg); }
+.hint { font-size: 14px; color: var(--muted); margin: 0; }
+textarea, input[type="number"], input[type="text"], input[type="date"], select {
+  font: inherit; font-size: 16px; color: var(--fg); background: var(--field);
+  border: 1px solid var(--line); border-radius: 0; padding: 9px 10px; min-height: 44px; min-width: 0; width: 100%;
+}
+input[type="number"], input[type="text"] { font-family: var(--mono); font-size: 17px; font-variant-numeric: tabular-nums; }
+textarea { font-family: var(--mono); font-size: 14px; line-height: 1.45; resize: vertical; }
+::placeholder { color: var(--muted); opacity: 1; }
+fieldset { border: 1px dashed var(--line); border-radius: 0; margin: 0; padding: 10px 12px 12px; min-width: 0; }
+legend { padding: 0 4px; }
+
+/* Buttons */
+button, .filebtn {
+  font: inherit; font-size: 15px; font-weight: 600; line-height: 1.2; border-radius: 0; padding: 11px 16px; min-height: 44px; cursor: pointer;
+  border: 1px solid var(--line); background: transparent; color: var(--fg);
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+}
+button:hover, .filebtn:hover { background: var(--surface-2); }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button.primary:hover { background: var(--accent); filter: brightness(1.1); }
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Segmented control */
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 0; overflow: hidden; max-width: 100%; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label { min-height: 44px; min-width: 56px; padding: 0 16px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-family: var(--mono); font-size: 15px; color: var(--muted); background: var(--field); }
+.seg label + input + label { border-left: 1px solid var(--line); }
+.seg input:checked + label { background: var(--accent); color: var(--accent-ink); }
+.seg input:focus-visible + label { outline: 3px solid var(--accent); outline-offset: -5px; box-shadow: inset 0 0 0 5px var(--field); }
+
+/* Status: printed on the slip in the receipt mono, boxed by the printer's rule. */
+.status { font-family: var(--mono); font-size: 15px; margin: 12px 0 0; padding: 6px 10px; border: 1px solid var(--line); border-radius: 0; color: var(--muted); }
+.status.good { color: var(--good); border-color: var(--good); }
+.status.warn { color: var(--warn); border-color: var(--warn); }
+.status.bad { color: var(--bad); border-color: var(--bad); }
+.tag { display: inline-block; font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--warn); border: 1px dashed var(--warn); border-radius: 0; padding: 1px 7px; margin-left: 6px; vertical-align: 1px; }
+
+/* Readouts: the payout lines on the slip. The key one is the winning line, a notched mini ticket under a red tear. */
+.chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.chip { padding: 10px 14px 12px; min-width: 0; border-top: 1px dashed var(--line); background: var(--surface-2); }
+.chip .k { font-family: var(--body); font-size: 12.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.chip .v { font-family: var(--mono); font-size: 22px; color: var(--fg); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; line-height: 1.2; }
+.chip .s { font-family: var(--body); font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; line-height: 1.4; }
+.chip.mark {
+  border-top: 2px dashed var(--mark); padding: 10px 22px 12px;
+  background:
+    radial-gradient(circle at 0 55%, var(--surface) 8px, var(--hair) 8.5px, var(--hair) 9.5px, transparent 10px),
+    radial-gradient(circle at 100% 55%, var(--surface) 8px, var(--hair) 8.5px, var(--hair) 9.5px, transparent 10px),
+    var(--field);
+  box-shadow: inset 0 -1px 0 var(--hair);
+}
+.chip.mark .k { font-family: var(--display); font-weight: 400; font-size: 14px; letter-spacing: .02em; text-transform: none; color: var(--fg); }
+.chip.mark .v { font-size: 30px; color: var(--mark); }
+
+/* Tables: the printed entry, receipt mono with dashed printer rules. */
+.scroll { overflow: auto; max-height: 520px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
+th, td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--hair); }
+th { position: sticky; top: 0; background: var(--surface); font-family: var(--body); font-weight: 600; color: var(--fg); font-size: 12.5px; border-bottom: 2px dashed var(--line); }
+th small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+td.na { color: var(--muted); }
+
+/* Charts: hand-drawn SVG reads these. */
+.chart-box { position: relative; min-width: 0; }
+.chart-box svg { display: block; width: 100%; height: auto; }
+.chart-box svg text, svg.chart text { font-family: var(--mono); font-size: 13px; fill: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: var(--muted); margin-top: 8px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 0; padding: 6px 8px; font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums; line-height: 1.4; white-space: nowrap; display: none; z-index: 2; }
+.tip b { font-weight: 400; color: var(--fg); }
+.tip .m { color: var(--muted); }
+
+/* Method and limits, footer */
+footer { margin-top: 8px; color: var(--muted); font-size: 16px; }
+.maker { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+details { background: var(--surface); border-top: 2px dashed var(--line); padding: 0 16px; margin-top: 12px; color: var(--fg); }
+summary { cursor: pointer; font-size: 1.05rem; padding: 12px 0; min-height: 44px; list-style-position: outside; color: var(--accent); }
+details[open] summary { border-bottom: 1px solid var(--hair); margin-bottom: 8px; }
+details[open] { padding-bottom: 12px; }
+details p, details li { max-width: 74ch; font-size: 16px; }
+details code, .eq { font-family: var(--mono); font-size: 15px; }
+.eq { display: block; background: var(--surface-2); border-top: 1px dashed var(--line); border-bottom: 1px dashed var(--line); padding: 8px 12px; margin: 8px 0; overflow-x: auto; white-space: pre; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+
+/* Lineup Dupe Check layout */
+.wrap > * { min-width: 0; }
+.panel { display: grid; gap: 14px; }
+.panel > * { min-width: 0; }
+.panel > .status, .panel > .chips { margin: 0; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+.row > * { min-width: 0; }
+.head-row { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; }
+.head-row h2, .head-row h3 { margin: 0; }
+.panel > h3 { margin: 4px 0 0; }
+.head-row .tag { margin-left: 0; }
+label { display: grid; gap: 5px; font-size: 15px; font-weight: 600; color: var(--fg); }
+input[type="file"] { font: inherit; font-size: 14px; font-weight: 400; color: var(--muted); min-height: 44px; max-width: 100%; }
+input[type="file"]::file-selector-button { font: inherit; font-size: 15px; font-weight: 600; color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 0; padding: 0 16px; min-height: 44px; margin-right: 10px; cursor: pointer; }
+input[type="file"]::file-selector-button:hover { background: var(--surface-2); }
+input[aria-invalid="true"] { border-color: var(--bad); border-width: 2px; }
+input[type="range"] { width: 100%; min-height: 44px; accent-color: var(--accent); }
+
+/* Example lineup switch: segmented look on aria-pressed buttons. */
+.seg button { border: 0; border-radius: 0; min-height: 44px; padding: 0 16px; background: var(--field); color: var(--muted); font-family: var(--mono); font-size: 15px; font-weight: 400; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.seg button:focus-visible { outline: 3px solid var(--accent); outline-offset: -5px; box-shadow: inset 0 0 0 5px var(--field); }
+
+/* Tables: left aligned text columns, right aligned figures. */
+.scroll { max-height: none; }
+th, td { text-align: left; vertical-align: middle; }
+th { letter-spacing: .1em; text-transform: uppercase; }
+td.num, th.num { text-align: right; }
+.lineup { min-width: 560px; }
+.lineup td { padding: 4px 6px; }
+.lineup td.slot { color: var(--muted); width: 56px; }
+.lineup td.c-name { width: 40%; }
+.lineup td.c-pos { width: 96px; }
+.lineup td.c-own { width: 100px; }
+.lineup td.c-sal { width: 112px; }
+.lineup tfoot td { border-bottom: 0; border-top: 2px dashed var(--line); padding-top: 8px; }
+.lineup input[type="text"] { font-family: var(--body); font-size: 16px; }
+
+/* Contest inputs. Prize boxes: 2, 4 or 8 equal columns so 8 boxes never orphan one. */
+.fieldgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.fieldgrid > * { min-width: 0; }
+.prizes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 8px; }
+@media (min-width: 600px) { .prizes { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .prizes { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+.prizes > * { min-width: 0; }
+.adv { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.adv > div { display: grid; gap: 6px; min-width: 0; align-content: start; }
+.adv p, .help { margin: 0; font-size: 16px; color: var(--muted); max-width: 68ch; }
+#adv { border-top: 1px dashed var(--line); padding: 0; }
+#adv summary { font-size: 0.95rem; }
+.pair { display: grid; grid-template-columns: 1fr 96px; gap: 8px; align-items: center; }
+
+/* Results */
+.chips .chip { display: grid; gap: 2px; align-content: start; }
+.verdict { margin: 0; display: inline-block; padding: 2px 10px; }
+.chain { font-family: var(--mono); font-size: 14px; font-variant-numeric: tabular-nums; background: var(--surface-2); border-top: 1px dashed var(--line); border-bottom: 1px dashed var(--line); padding: 10px 12px; overflow-x: auto; white-space: pre; margin: 0; }
+.chart-box { background: var(--field); }
+.chart-box svg { min-width: 520px; background: var(--field); }
+.chart-box .axis { stroke: var(--line); }
+.chart-box .grid { stroke: var(--chart-grid); }
+.chart-box svg text.val { fill: var(--fg); }
+.chart-box rect.hit { fill: transparent; cursor: default; }
+.chart-box rect.hit:focus { outline: none; }
+.chart-box rect.hit:focus-visible { stroke: var(--accent); stroke-width: 2; }
+#tip:not([hidden]) { display: grid; gap: 2px; }
+.tip span { color: var(--muted); }
+.legend { margin-top: 0; }
+.sw { display: inline-block; width: 12px; height: 12px; background: var(--chart-1); vertical-align: -1px; margin-right: 6px; }
+textarea.fallback { min-height: 140px; }
+
+/* Method notes and footer */
+footer p { margin: 0 0 6px; }
+.method { display: grid; gap: 10px; max-width: 74ch; }
+.method p, .method li { margin: 0; }
+.method ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+b, strong { font-weight: 600; }
+.vh { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="sheet-head">
+    <div class="tkt">
+      <div class="main">
+        <p class="adm">Admit one entry</p>
+        <h1>Lineup Dupe Check</h1>
+        <p class="terms">NFL Classic / $50,000 cap</p>
+      </div>
+      <div class="stub" aria-hidden="true">No. 13-000417</div>
+    </div>
+    <p class="lede">Estimate how many other entries in a large NFL Classic contest are likely holding your exact lineup, and what a tie does to the first-place prize.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="in-h">
+    <div class="head-row">
+      <h2 id="in-h">Lineup</h2>
+      <span class="tag" id="data-tag">Example data: Example slate</span>
+    </div>
+    <div class="row">
+      <div>
+        <span class="vh" id="ex-label">Example lineup</span>
+        <div class="seg" role="group" aria-labelledby="ex-label">
+          <button type="button" id="ex-chalk" aria-pressed="true">Chalk lineup</button>
+          <button type="button" id="ex-contrarian" aria-pressed="false">Contrarian lineup</button>
+        </div>
+      </div>
+      <label for="file-in">Load CSV, TSV or JSON
+        <input type="file" id="file-in" accept=".csv,.tsv,.txt,.json,text/csv,text/plain,application/json">
+      </label>
+    </div>
+    <p class="help">DraftKings-style NFL Classic: QB, RB, RB, WR, WR, WR, TE, FLEX, DST; $50,000 cap. FLEX takes an RB, WR or TE, so enter each player's real position and the slot fills itself. Ownership is the projected percent of the field rostering that player.</p>
+    <div class="scroll">
+      <table class="lineup" id="lineup">
+        <thead><tr><th scope="col">Slot</th><th scope="col">Player</th><th scope="col">Pos</th><th scope="col" class="num">Own %</th><th scope="col" class="num">Salary</th></tr></thead>
+        <tbody id="lineup-body"></tbody>
+        <tfoot><tr><td></td><td colspan="2">Salary used / remaining</td><td></td><td class="num" id="sal-total"></td></tr></tfoot>
+      </table>
+    </div>
+
+    <h3>Contest</h3>
+    <div class="fieldgrid">
+      <label for="field-n">Field size (total entries)
+        <input type="number" id="field-n" min="1" max="10000000" step="1" inputmode="numeric">
+      </label>
+    </div>
+    <div>
+      <p class="help" id="contest-note"></p>
+      <p class="help" id="prize-help">Top prizes, 1st place first. Leave trailing boxes blank to use fewer places. A tie for 1st among g entries pays the average of places 1 through g.</p>
+      <div class="prizes" id="prizes" aria-describedby="prize-help"></div>
+    </div>
+
+    <details id="adv">
+      <summary>Advanced: salary decay and chalk correlation</summary>
+      <div class="adv">
+        <div>
+          <label for="decay">Salary decay ($)</label>
+          <input type="number" id="decay" min="1" step="50">
+          <p>Most of a large field spends $49,500 to $50,000. A lineup that leaves money unspent is built by fewer people, so its duplicate chance is multiplied by e<sup>-remaining / decay</sup>. At the default $1,500, leaving $1,500 unspent cuts the estimate to 37%. A larger decay means a smaller penalty.</p>
+        </div>
+        <div>
+          <label for="corr-n">Chalk correlation multiplier</label>
+          <div class="pair">
+            <input type="range" id="corr-r" min="0.5" max="5" step="0.1" aria-label="Chalk correlation multiplier slider">
+            <input type="number" id="corr-n" min="0.5" max="5" step="0.1">
+          </div>
+          <p>The base estimate treats every player pick as independent. Real entries are not: people stack a quarterback with his receivers and pair popular plays, so chalk combinations show up together more often than the product of ownerships suggests. Values above 1 raise the duplicate estimate for that effect. 1.0 means no adjustment.</p>
+        </div>
+      </div>
+    </details>
+    <div id="status" class="status good" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="out-h">
+    <div class="head-row">
+      <h2 id="out-h">Results</h2>
+      <span id="verdict"></span>
+    </div>
+    <div class="chips">
+      <div class="chip mark"><span class="k">Expected duplicates</span><span class="v" id="t-e"></span><span class="s">other entries with this exact lineup</span></div>
+      <div class="chip"><span class="k">Chance it is unique</span><span class="v" id="t-u"></span><span class="s">no other entry matches</span></div>
+      <div class="chip"><span class="k">1st place if it wins</span><span class="v" id="t-pay"></span><span class="s" id="t-pay-s"></span></div>
+      <div class="chip"><span class="k">Per-opponent match</span><span class="v" id="t-p"></span><span class="s">chance one random entry equals yours</span></div>
+    </div>
+    <pre class="chain" id="chain" aria-label="Calculation chain"></pre>
+
+    <div class="head-row">
+      <h3 id="chart-h">Number of duplicates, k</h3>
+      <div class="legend"><span><span class="sw"></span>P(k other entries hold this lineup), binomial</span></div>
+    </div>
+    <div class="chart-box scroll" id="chartbox">
+      <svg id="chart" viewBox="0 0 720 260" role="img" aria-labelledby="chart-h chart-desc"><desc id="chart-desc">Bar chart of the probability of 0 through 10 or more duplicate entries.</desc></svg>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+    <div class="scroll">
+      <table id="dist-table">
+        <caption class="vh">Duplicate count distribution</caption>
+        <thead><tr><th scope="col">k</th><th scope="col" class="num">Binomial</th><th scope="col" class="num">Poisson</th><th scope="col" class="num">Tie-split 1st prize</th></tr></thead>
+        <tbody id="dist-body"></tbody>
+      </table>
+    </div>
+    <p class="help" id="pois-note"></p>
+    <div class="row">
+      <button type="button" class="primary" id="copy-csv">Copy results as CSV</button>
+      <span class="help" id="copy-msg" role="status" aria-live="polite"></span>
+    </div>
+    <label for="csv-fallback" id="fallback-wrap" hidden>Copy did not work here. Select the text below and copy it.
+      <textarea id="csv-fallback" class="fallback" readonly></textarea>
+    </label>
+  </section>
+
+  <footer>
+    <p>Built by Will Whitmire. Runs entirely in your browser; nothing you enter is uploaded.</p>
+    <p class="maker">W. Whitmire / Field Tools / No. 13</p>
+    <p>Not affiliated with, endorsed by, or connected to any daily fantasy sports operator. Player names in the example slate are invented.</p>
+    <details id="method">
+      <summary>Method and limits</summary>
+      <div class="method">
+        <p>This is a heuristic estimator. It does not measure real contest entries; it turns projected ownership into a rough duplicate count.</p>
+        <p><b>1. Base match chance.</b> Treat each opponent entry as picking each of your nine players independently, with chance equal to that player's projected ownership.</p>
+        <code class="eq">p0 = own_1 x own_2 x ... x own_9      (ownership as fractions)</code>
+        <p>A Classic lineup is a set of nine players. Two entries with the same nine players are the same lineup even if two receivers sit in different WR slots or a different RB fills FLEX, and ownership already counts a player in whatever slot he was used. So no permutation count is multiplied in; doing so would double count.</p>
+        <p><b>2. Salary left on the table.</b> <code>s = exp(-remaining / decay)</code>, decay $1,500 by default. A full-cap lineup gets s = 1.</p>
+        <p><b>3. Chalk correlation.</b> <code>c</code>, 0.5 to 5, default 1.0. A plain multiplier for stacking and other correlated picks.</p>
+        <code class="eq">p = min(1, p0 x s x c)
+E = (N - 1) x p
+P(unique) = (1 - p)^(N - 1)
+P(k) = C(N-1, k) p^k (1 - p)^(N-1-k)     k = 0, 1, 2, ...</code>
+        <p>The binomial is computed exactly in log space. The Poisson approximation with mean E is shown beside it; for large fields the two differ by at most (N - 1) p<sup>2</sup> in total variation (Le Cam's bound), which is tiny here.</p>
+        <p><b>4. Tie split.</b> If your lineup finishes first and k others hold it, the k+1 tied entries split places 1 through k+1, so each gets their average. Places beyond the prizes you entered are valued at your last entered prize.</p>
+        <code class="eq">E[prize | you finish 1st] = sum over k of P(k) x avg(prize_1 ... prize_k+1)</code>
+        <h3>Limits</h3>
+        <ul>
+          <li>Ownership projections are themselves estimates, and the result is very sensitive to them: nine numbers are multiplied, so a 20% error in each compounds to about a factor of 5 when they all run high (1.2^9) and about 7 when they all run low (0.8^9).</li>
+          <li>Independence is wrong for real fields. Stacks, game environments and popular optimizer settings cluster entries. The correlation multiplier is a single knob, not a model of that structure.</li>
+          <li>Ownership values are treated as independent draws even though a real roster cannot repeat a position past its slot count. For typical ownership levels the effect is small next to the projection error.</li>
+          <li>Multi-entry players can enter the same lineup many times. Those copies are not independent and are not modeled.</li>
+          <li>The salary factor is a smooth guess at how the field spends salary. It is not fit to any contest data.</li>
+          <li>The payout table ignores the rest of the prize structure; only the places a tie for first can reach matter for the number shown.</li>
+          <li>Results inform contest strategy only. They are not a forecast of winnings.</li>
+        </ul>
+        <p>File format: one row per player with columns name, position, ownership, salary (comma or tab separated, header optional, extra columns ignored), or JSON with a players list. Files are capped at 5 MB and 50,000 rows.</p>
+      </div>
+    </details>
+  </footer>
+</div>
+
+<script id="core">
+var DupeCore = (function () {
+  "use strict";
+  var SALARY_CAP = 50000, DEFAULT_DECAY = 1500, DEFAULT_CORR = 1.0, CORR_MIN = 0.5, CORR_MAX = 5.0;
+  var MAX_FIELD = 10000000, DIST_BINS = 10, MAX_BYTES = 5 * 1024 * 1024, MAX_ROWS = 50000;
+  var POSITIONS = ["QB", "RB", "WR", "TE", "DST"];
+  var ALIASES = { "QB": "QB", "RB": "RB", "WR": "WR", "TE": "TE", "DST": "DST", "D/ST": "DST", "DEF": "DST", "D": "DST" };
+
+  function LineupError(code, message) { var e = new Error(message); e.code = code; e.isLineupError = true; return e; }
+  function finite(x) { return typeof x === "number" && isFinite(x); }
+  function sum(arr) { // Neumaier compensated sum (stands in for math.fsum)
+    var s = 0, c = 0;
+    for (var i = 0; i < arr.length; i++) {
+      var x = arr[i], t = s + x;
+      if (Math.abs(s) >= Math.abs(x)) c += (s - t) + x; else c += (x - t) + s;
+      s = t;
+    }
+    return s + c;
+  }
+  function fmt0(x) { return Math.round(x).toLocaleString("en-US"); }
+
+  function normalizePosition(pos) {
+    var key = String(pos).trim().toUpperCase().replace(/ /g, "");
+    if (!Object.prototype.hasOwnProperty.call(ALIASES, key)) {
+      throw LineupError("position", "Unknown position '" + pos + "'. Use QB, RB, WR, TE or DST (FLEX is a slot, so list the player's real position: RB, WR or TE).");
+    }
+    return ALIASES[key];
+  }
+
+  function validateLineup(players, cap) {
+    if (cap === undefined) cap = SALARY_CAP;
+    if (!players || players.length !== 9) throw LineupError("count", "A Classic lineup has exactly 9 players; got " + (players ? players.length : 0) + ".");
+    var out = [], seen = {};
+    for (var i = 0; i < players.length; i++) {
+      var pl = players[i], name = String(pl.name).trim();
+      if (!name) throw LineupError("name", "Player " + (i + 1) + " has no name.");
+      var low = name.toLowerCase();
+      if (seen[low]) throw LineupError("duplicate", "'" + name + "' appears more than once.");
+      seen[low] = true;
+      var pos = normalizePosition(pl.position);
+      if (!finite(pl.ownership) || !(pl.ownership > 0 && pl.ownership <= 100)) throw LineupError("ownership", name + ": ownership must be a number above 0 and at most 100 (got " + pl.ownership + ").");
+      if (!finite(pl.salary) || pl.salary <= 0) throw LineupError("salary", name + ": salary must be a positive number (got " + pl.salary + ").");
+      out.push({ name: name, position: pos, ownership: pl.ownership, salary: pl.salary });
+    }
+    var counts = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0 };
+    out.forEach(function (p) { counts[p.position]++; });
+    var flex = counts.RB + counts.WR + counts.TE;
+    var ok = counts.QB === 1 && counts.DST === 1 && counts.RB >= 2 && counts.WR >= 3 && counts.TE >= 1 && flex === 7;
+    if (!ok) throw LineupError("position", "Positions must fill QB, RB, RB, WR, WR, WR, TE, FLEX (RB/WR/TE), DST. Got " + POSITIONS.map(function (p) { return p + " x" + counts[p]; }).join(", ") + ".");
+    var total = sum(out.map(function (p) { return p.salary; }));
+    if (total > cap) throw LineupError("cap", "Total salary " + fmt0(total) + " is over the " + fmt0(cap) + " cap.");
+    return out;
+  }
+
+  function assignSlots(players) {
+    var need = { RB: 2, WR: 3, TE: 1 };
+    return players.map(function (p) {
+      if (Object.prototype.hasOwnProperty.call(need, p.position)) {
+        if (need[p.position] > 0) { need[p.position]--; return p.position; }
+        return "FLEX";
+      }
+      return p.position;
+    });
+  }
+
+  function baseProbability(owns) {
+    var s = 0;
+    for (var i = 0; i < owns.length; i++) s += Math.log(owns[i] / 100);
+    return Math.exp(s);
+  }
+  function salaryFactor(remaining, decay) {
+    if (decay === undefined) decay = DEFAULT_DECAY;
+    if (!finite(decay) || decay <= 0) throw LineupError("decay", "Salary decay must be a positive number.");
+    return Math.exp(-Math.max(0, remaining) / decay);
+  }
+  function dupeProbability(p0, s, c) { return Math.min(1, p0 * s * c); }
+
+  function binomialPmfList(n, p, kmax) {
+    var out = []; for (var i = 0; i <= kmax; i++) out.push(0);
+    if (n <= 0 || p <= 0) { out[0] = 1; return out; }
+    if (p >= 1) { if (n <= kmax) out[n] = 1; return out; }
+    var q = Math.log1p(-p), lr = Math.log(p) - q, lp = n * q;
+    for (var k = 0; k <= kmax; k++) {
+      if (k > n) break;
+      out[k] = Math.exp(lp);
+      if (k < n) lp += Math.log(n - k) - Math.log(k + 1) + lr;
+    }
+    return out;
+  }
+  function poissonPmfList(lam, kmax) {
+    var out = []; for (var i = 0; i <= kmax; i++) out.push(0);
+    if (lam <= 0) { out[0] = 1; return out; }
+    var ll = Math.log(lam), lp = -lam;
+    for (var k = 0; k <= kmax; k++) { out[k] = Math.exp(lp); lp += ll - Math.log(k + 1); }
+    return out;
+  }
+  function tailSum(logFirst, step, start, stop, mean) {
+    var total = 0, lp = logFirst, k = start;
+    while (k <= stop) {
+      var w = Math.exp(lp);
+      total += w;
+      if (k >= mean && (w === 0 || w <= total * 1e-17)) break;
+      lp += step(k);
+      k++;
+    }
+    return total;
+  }
+  function binomialTail(n, p, start) {
+    if (start <= 0) return 1;
+    if (n < start || p <= 0) return 0;
+    if (p >= 1) return 1;
+    var t = 1 - sum(binomialPmfList(n, p, start - 1));
+    if (t > 1e-6) return t;
+    var q = Math.log1p(-p), lr = Math.log(p) - q, lp = n * q;
+    for (var k = 0; k < start; k++) lp += Math.log(n - k) - Math.log(k + 1) + lr;
+    return tailSum(lp, function (j) { return Math.log(n - j) - Math.log(j + 1) + lr; }, start, n, n * p);
+  }
+  function poissonTail(lam, start) {
+    if (start <= 0) return 1;
+    if (lam <= 0) return 0;
+    var t = 1 - sum(poissonPmfList(lam, start - 1));
+    if (t > 1e-6) return t;
+    var ll = Math.log(lam), lp = -lam;
+    for (var k = 0; k < start; k++) lp += ll - Math.log(k + 1);
+    return tailSum(lp, function (j) { return ll - Math.log(j + 1); }, start, 1e12, lam);
+  }
+
+  function validatePrizes(prizes) {
+    if (!Array.isArray(prizes)) throw LineupError("prizes", "Prizes must be a list of numbers, 1st place first.");
+    if (prizes.length === 0) throw LineupError("prizes", "Enter at least one prize (first place).");
+    var out = [];
+    for (var i = 0; i < prizes.length; i++) {
+      var x = prizes[i];
+      if (!finite(x) || x < 0) throw LineupError("prizes", "Prize for place " + (i + 1) + " must be a number of 0 or more.");
+      if (out.length && x > out[out.length - 1]) throw LineupError("prizes", "Prize for place " + (i + 1) + " is larger than place " + i + "; list prizes from 1st down.");
+      out.push(x);
+    }
+    return out;
+  }
+  function tieSplit(prizes, group) {
+    var m = prizes.length;
+    if (group <= m) return sum(prizes.slice(0, group)) / group;
+    return (sum(prizes) + (group - m) * prizes[m - 1]) / group;
+  }
+  function expectedFirstPayout(n, p, prizes) {
+    if (n <= 0 || p <= 0) return tieSplit(prizes, 1);
+    if (p >= 1) return tieSplit(prizes, n + 1);
+    var m = prizes.length, last = prizes[m - 1];
+    var d = sum(prizes) - m * last;
+    var head = binomialPmfList(n, p, m - 1), terms = [];
+    for (var k = 0; k < m; k++) terms.push(head[k] * (tieSplit(prizes, k + 1) - last - d / (k + 1)));
+    var invMean = -Math.expm1((n + 1) * Math.log1p(-p)) / ((n + 1) * p);
+    return sum(terms) + last + d * invMean;
+  }
+
+  function analyze(players, fieldSize, prizes, opts) {
+    opts = opts || {};
+    var cap = opts.cap === undefined ? SALARY_CAP : opts.cap;
+    var decay = opts.decay === undefined ? DEFAULT_DECAY : opts.decay;
+    var corr = opts.corr === undefined ? DEFAULT_CORR : opts.corr;
+    var lineup = validateLineup(players, cap);
+    if (!(Number.isInteger(fieldSize) && fieldSize >= 1 && fieldSize <= MAX_FIELD)) throw LineupError("field", "Field size must be a whole number from 1 to " + fmt0(MAX_FIELD) + ".");
+    if (!finite(corr) || corr < CORR_MIN || corr > CORR_MAX) throw LineupError("corr", "Chalk correlation must be between " + CORR_MIN + " and " + CORR_MAX + ".");
+    var prizeList = validatePrizes(prizes === undefined || prizes === null ? [1] : prizes);
+    var total = sum(lineup.map(function (p) { return p.salary; }));
+    var remaining = cap - total;
+    var p0 = baseProbability(lineup.map(function (p) { return p.ownership; }));
+    var s = salaryFactor(remaining, decay);
+    var p = dupeProbability(p0, s, corr);
+    var n = fieldSize - 1, expected = n * p;
+    var pUnique = p >= 1 ? (n > 0 ? 0 : 1) : Math.exp(n * Math.log1p(-p));
+    var binom = binomialPmfList(n, p, DIST_BINS - 1).concat([binomialTail(n, p, DIST_BINS)]);
+    var pois = poissonPmfList(expected, DIST_BINS - 1).concat([poissonTail(expected, DIST_BINS)]);
+    var maxDiff = 0;
+    for (var i = 0; i < binom.length; i++) maxDiff = Math.max(maxDiff, Math.abs(binom[i] - pois[i]));
+    var solo = prizeList[0], expFirst = expectedFirstPayout(n, p, prizeList);
+    return {
+      total_salary: total, remaining: remaining, p0: p0, salary_factor: s, corr: corr, p: p,
+      expected_dupes: expected, p_unique: pUnique, binomial: binom, poisson: pois, max_abs_diff: maxDiff,
+      solo_prize: solo, expected_first_payout: expFirst, payout_ratio: solo > 0 ? expFirst / solo : 1,
+      slots: assignSlots(lineup)
+    };
+  }
+
+  // ---- parsing (pure) ----
+  function parseNumber(raw) {
+    if (typeof raw === "boolean" || raw === null || raw === undefined) return NaN;
+    if (typeof raw === "number") return raw;
+    var s = String(raw).trim().replace(/[,$%]/g, "");
+    if (s === "" || !/^[+-]?(\d+\.?\d*|\.\d+)([eE][+-]?\d+)?$/.test(s)) return NaN;
+    var v = Number(s);
+    return isFinite(v) ? v : NaN;
+  }
+  function splitLine(line, delim) {
+    var out = [], cur = "", q = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (q) {
+        if (ch === '"') { if (line[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+        else cur += ch;
+      } else if (ch === '"') q = true;
+      else if (ch === delim) { out.push(cur.trim()); cur = ""; }
+      else cur += ch;
+    }
+    out.push(cur.trim());
+    return out;
+  }
+  var HEADER_KEYS = {
+    name: ["name", "player", "player name"],
+    position: ["position", "pos", "roster position"],
+    ownership: ["ownership", "own", "own%", "ownership%", "projected ownership", "proj own", "pown"],
+    salary: ["salary", "sal", "cost"]
+  };
+  function countChar(s, c) { return s.split(c).length - 1; }
+  function tooBig(text) { return text.length > MAX_BYTES; } // UTF-16 units; the UI also checks the byte size
+  function parsePlayersText(text) {
+    if (tooBig(text)) throw LineupError("file", "File is larger than 5 MB.");
+    text = text.replace(/^\uFEFF/, "");
+    var lines = text.replace(/\r\n?/g, "\n").split("\n").filter(function (l) { return l.trim() !== ""; });
+    if (!lines.length) throw LineupError("file", "No rows found. Expected name, position, ownership, salary.");
+    if (lines.length > MAX_ROWS) throw LineupError("file", "File has more than " + fmt0(MAX_ROWS) + " rows.");
+    var delim = countChar(lines[0], "\t") > countChar(lines[0], ",") ? "\t" : ",";
+    var first = splitLine(lines[0], delim).map(function (c) { return c.toLowerCase(); });
+    var idx = { name: 0, position: 1, ownership: 2, salary: 3 }, start = 0;
+    var fields = Object.keys(HEADER_KEYS);
+    var isHeader = first.some(function (c) { return fields.some(function (f) { return HEADER_KEYS[f].indexOf(c) >= 0; }); });
+    if (isHeader) {
+      var found = {};
+      fields.forEach(function (f) {
+        for (var j = 0; j < first.length; j++) if (HEADER_KEYS[f].indexOf(first[j]) >= 0) { found[f] = j; break; }
+      });
+      var missing = fields.filter(function (f) { return !(f in found); });
+      if (missing.length) throw LineupError("file", "Header is missing column(s): " + missing.join(", ") + ".");
+      idx = found; start = 1;
+    }
+    var need = Math.max(idx.name, idx.position, idx.ownership, idx.salary);
+    var players = [];
+    for (var r = start; r < lines.length; r++) {
+      var cells = splitLine(lines[r], delim), row = r + 1;
+      if (cells.length <= need) throw LineupError("file", "Row " + row + " has " + cells.length + " column(s); need name, position, ownership, salary.");
+      var own = parseNumber(cells[idx.ownership]), sal = parseNumber(cells[idx.salary]);
+      if (isNaN(own)) throw LineupError("file", "Row " + row + ": ownership '" + cells[idx.ownership] + "' is not a number.");
+      if (isNaN(sal)) throw LineupError("file", "Row " + row + ": salary '" + cells[idx.salary] + "' is not a number.");
+      players.push({ name: cells[idx.name], position: cells[idx.position], ownership: own, salary: sal });
+    }
+    return players;
+  }
+  function parseJsonText(text) {
+    var data;
+    if (tooBig(text)) throw LineupError("file", "File is larger than 5 MB.");
+    try { data = JSON.parse(text.replace(/^\uFEFF/, "")); } catch (e) { throw LineupError("file", "Not valid JSON. Check brackets, quotes and commas."); }
+    if (Array.isArray(data)) data = { players: data };
+    if (!data || typeof data !== "object" || !Array.isArray(data.players)) throw LineupError("file", "JSON must be a list of players or an object with a 'players' list.");
+    var players = data.players.map(function (row, i) {
+      if (!row || typeof row !== "object") throw LineupError("file", "Player " + (i + 1) + " is not an object.");
+      return { name: String(row.name === undefined ? "" : row.name), position: String(row.position === undefined ? "" : row.position), ownership: parseNumber(row.ownership), salary: parseNumber(row.salary) };
+    });
+    var out = { players: players };
+    ["field_size", "prizes", "decay", "corr"].forEach(function (k) { if (k in data) out[k] = data[k]; });
+    return out;
+  }
+
+  // CSV cell for export. Text that a spreadsheet would read as a formula (starts with
+  // = + - @, tab or CR) is prefixed with a single quote. Numbers pass through unchanged.
+  function csvCell(v) {
+    var s = String(v);
+    if (typeof v === "string" && /^[=+\-@\t\r]/.test(s)) s = "'" + s;
+    return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+
+  var EXAMPLE_FIELD = 150000;
+  var EXAMPLE_PRIZES = [100000, 50000, 25000, 15000, 10000];
+  var EXAMPLES = {
+    chalk: [
+      { name: "QB Alpha", position: "QB", ownership: 18.0, salary: 6400 },
+      { name: "RB Bravo", position: "RB", ownership: 38.0, salary: 8600 },
+      { name: "RB Charlie", position: "RB", ownership: 26.0, salary: 6200 },
+      { name: "WR Delta", position: "WR", ownership: 31.0, salary: 7800 },
+      { name: "WR Echo", position: "WR", ownership: 24.0, salary: 5800 },
+      { name: "WR Foxtrot", position: "WR", ownership: 29.0, salary: 4600 },
+      { name: "TE Golf", position: "TE", ownership: 21.0, salary: 4300 },
+      { name: "RB Hotel", position: "RB", ownership: 35.0, salary: 3400 },
+      { name: "DST India", position: "DST", ownership: 16.0, salary: 2800 }
+    ],
+    contrarian: [
+      { name: "QB Juliet", position: "QB", ownership: 4.0, salary: 5600 },
+      { name: "RB Kilo", position: "RB", ownership: 9.0, salary: 7400 },
+      { name: "RB Lima", position: "RB", ownership: 3.5, salary: 5200 },
+      { name: "WR Mike", position: "WR", ownership: 6.0, salary: 7200 },
+      { name: "WR November", position: "WR", ownership: 2.5, salary: 6000 },
+      { name: "WR Oscar", position: "WR", ownership: 5.0, salary: 5000 },
+      { name: "TE Papa", position: "TE", ownership: 3.0, salary: 3800 },
+      { name: "WR Quebec", position: "WR", ownership: 7.5, salary: 5400 },
+      { name: "DST Romeo", position: "DST", ownership: 4.0, salary: 3200 }
+    ]
+  };
+
+  return {
+    SALARY_CAP: SALARY_CAP, DEFAULT_DECAY: DEFAULT_DECAY, DEFAULT_CORR: DEFAULT_CORR, CORR_MIN: CORR_MIN, CORR_MAX: CORR_MAX,
+    MAX_BYTES: MAX_BYTES, MAX_ROWS: MAX_ROWS, DIST_BINS: DIST_BINS, POSITIONS: POSITIONS,
+    validateLineup: validateLineup, assignSlots: assignSlots, baseProbability: baseProbability, salaryFactor: salaryFactor,
+    dupeProbability: dupeProbability, binomialPmfList: binomialPmfList, poissonPmfList: poissonPmfList,
+    binomialTail: binomialTail, poissonTail: poissonTail, validatePrizes: validatePrizes, tieSplit: tieSplit,
+    expectedFirstPayout: expectedFirstPayout, analyze: analyze, parseNumber: parseNumber,
+    parsePlayersText: parsePlayersText, parseJsonText: parseJsonText, csvCell: csvCell,
+    EXAMPLE_FIELD: EXAMPLE_FIELD, EXAMPLE_PRIZES: EXAMPLE_PRIZES, EXAMPLES: EXAMPLES
+  };
+})();
+</script>
+
+<script id="ui">
+(function () {
+  "use strict";
+  var C = DupeCore;
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var PRIZE_BOXES = 8;
+  var $ = function (id) { return document.getElementById(id); };
+  var state = { example: "chalk", lastResult: null, lastPlayers: null, lastPrizes: null, fieldN: 0 };
+
+  function store(k, v) { try { localStorage.setItem("dupe-ui-" + k, v); } catch (e) { /* storage unavailable */ } }
+  function recall(k) { try { return localStorage.getItem("dupe-ui-" + k); } catch (e) { return null; } }
+
+  function fmtInt(x) { return Math.round(x).toLocaleString("en-US"); }
+  function fmtMoney(x) { return "$" + (Math.abs(x - Math.round(x)) < 0.005 ? fmtInt(x) : x.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })); }
+  function fmtSci(x) {
+    if (x === 0) return "0";
+    if (x >= 0.001 && x < 1e6) return x.toPrecision(4).replace(/\.?0+$/, "");
+    var e = Math.floor(Math.log10(Math.abs(x))), m = x / Math.pow(10, e);
+    if (m >= 9.9995) { m /= 10; e += 1; }
+    return m.toFixed(3) + "e" + (e >= 0 ? "+" : "") + e;
+  }
+  function fmtPct(x) {
+    if (x === 0) return "0%";
+    if (x === 1) return "100%";
+    if (x >= 0.999 && x < 1) {
+      var dec = Math.ceil(-Math.log10((1 - x) * 100)) + 1;
+      if (dec > 9) return ">99.9999999%";
+      return (x * 100).toFixed(dec) + "%";
+    }
+    if (x < 0.0001) return "<0.01% (" + fmtSci(x) + ")";
+    return (x * 100).toFixed(x < 0.1 ? 2 : 1) + "%";
+  }
+
+  // ---- lineup table ----
+  function buildRows() {
+    var body = $("lineup-body");
+    for (var i = 0; i < 9; i++) {
+      var tr = document.createElement("tr");
+      var tdSlot = document.createElement("td"); tdSlot.className = "slot"; tdSlot.id = "slot-" + i;
+      var tdName = document.createElement("td"); tdName.className = "c-name";
+      var lab = document.createElement("label"); lab.className = "vh"; lab.htmlFor = "name-" + i; lab.textContent = "Player " + (i + 1) + " name";
+      var inName = document.createElement("input"); inName.type = "text"; inName.id = "name-" + i; inName.maxLength = 60; inName.autocomplete = "off";
+      tdName.appendChild(lab); tdName.appendChild(inName);
+      var tdPos = document.createElement("td"); tdPos.className = "c-pos";
+      var labP = document.createElement("label"); labP.className = "vh"; labP.htmlFor = "pos-" + i; labP.textContent = "Player " + (i + 1) + " position";
+      var sel = document.createElement("select"); sel.id = "pos-" + i;
+      C.POSITIONS.forEach(function (p) { var o = document.createElement("option"); o.value = p; o.textContent = p; sel.appendChild(o); });
+      tdPos.appendChild(labP); tdPos.appendChild(sel);
+      var tdOwn = document.createElement("td"); tdOwn.className = "c-own num";
+      var labO = document.createElement("label"); labO.className = "vh"; labO.htmlFor = "own-" + i; labO.textContent = "Player " + (i + 1) + " projected ownership percent";
+      var inOwn = document.createElement("input"); inOwn.type = "number"; inOwn.id = "own-" + i; inOwn.min = "0.01"; inOwn.max = "100"; inOwn.step = "0.1"; inOwn.inputMode = "decimal";
+      tdOwn.appendChild(labO); tdOwn.appendChild(inOwn);
+      var tdSal = document.createElement("td"); tdSal.className = "c-sal num";
+      var labS = document.createElement("label"); labS.className = "vh"; labS.htmlFor = "sal-" + i; labS.textContent = "Player " + (i + 1) + " salary";
+      var inSal = document.createElement("input"); inSal.type = "number"; inSal.id = "sal-" + i; inSal.min = "0"; inSal.step = "100"; inSal.inputMode = "numeric";
+      tdSal.appendChild(labS); tdSal.appendChild(inSal);
+      tr.appendChild(tdSlot); tr.appendChild(tdName); tr.appendChild(tdPos); tr.appendChild(tdOwn); tr.appendChild(tdSal);
+      body.appendChild(tr);
+    }
+    var pz = $("prizes");
+    for (var j = 0; j < PRIZE_BOXES; j++) {
+      var l = document.createElement("label"); l.htmlFor = "prize-" + j;
+      l.appendChild(document.createTextNode(ordinal(j + 1) + " place ($)"));
+      var inp = document.createElement("input"); inp.type = "number"; inp.id = "prize-" + j; inp.min = "0"; inp.step = "100"; inp.inputMode = "decimal";
+      l.appendChild(inp); pz.appendChild(l);
+    }
+  }
+  function ordinal(n) { var s = ["th", "st", "nd", "rd"], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
+
+  function setPlayers(players) {
+    for (var i = 0; i < 9; i++) {
+      var p = players[i] || { name: "", position: "WR", ownership: NaN, salary: NaN };
+      $("name-" + i).value = p.name;
+      var pos; try { pos = C.POSITIONS.indexOf(String(p.position).trim().toUpperCase()) >= 0 ? String(p.position).trim().toUpperCase() : null; } catch (e) { pos = null; }
+      if (!pos) { try { pos = ({ "D/ST": "DST", "DEF": "DST", "D": "DST" })[String(p.position).trim().toUpperCase()] || "WR"; } catch (e) { pos = "WR"; } }
+      $("pos-" + i).value = pos;
+      $("own-" + i).value = isFinite(p.ownership) ? String(p.ownership) : "";
+      $("sal-" + i).value = isFinite(p.salary) ? String(p.salary) : "";
+    }
+  }
+  function setPrizes(prizes) {
+    for (var j = 0; j < PRIZE_BOXES; j++) $("prize-" + j).value = j < prizes.length ? String(prizes[j]) : "";
+  }
+  function readPlayers() {
+    var out = [];
+    for (var i = 0; i < 9; i++) {
+      out.push({ name: $("name-" + i).value, position: $("pos-" + i).value, ownership: C.parseNumber($("own-" + i).value), salary: C.parseNumber($("sal-" + i).value) });
+    }
+    return out;
+  }
+  function readPrizes() {
+    var vals = [];
+    for (var j = 0; j < PRIZE_BOXES; j++) vals.push($("prize-" + j).value.trim());
+    while (vals.length && vals[vals.length - 1] === "") vals.pop();
+    return vals.map(function (v) { return v === "" ? NaN : C.parseNumber(v); });
+  }
+
+  function loadExample(key) {
+    state.example = key;
+    setPlayers(C.EXAMPLES[key]);
+    $("ex-chalk").setAttribute("aria-pressed", String(key === "chalk"));
+    $("ex-contrarian").setAttribute("aria-pressed", String(key === "contrarian"));
+    $("data-tag").textContent = "Example data: Example slate, " + (key === "chalk" ? "chalk lineup" : "contrarian lineup");
+    store("example", key);
+    recompute();
+  }
+
+  function markInvalid(code) {
+    for (var i = 0; i < 9; i++) {
+      $("own-" + i).removeAttribute("aria-invalid");
+      $("sal-" + i).removeAttribute("aria-invalid");
+    }
+    if (code === "ownership" || code === "salary") {
+      var ps = readPlayers();
+      for (var k = 0; k < 9; k++) {
+        var o = ps[k].ownership, s = ps[k].salary;
+        if (!(isFinite(o) && o > 0 && o <= 100)) $("own-" + k).setAttribute("aria-invalid", "true");
+        if (!(isFinite(s) && s > 0)) $("sal-" + k).setAttribute("aria-invalid", "true");
+      }
+    }
+  }
+
+  function setStatus(msg, bad) {
+    var el = $("status");
+    el.textContent = msg;
+    el.className = "status " + (bad ? "bad" : "good");
+  }
+
+  function recompute() {
+    var players = readPlayers();
+    var total = 0, okSal = true;
+    players.forEach(function (p) { if (isFinite(p.salary)) total += p.salary; else okSal = false; });
+    $("sal-total").textContent = okSal ? fmtInt(total) + " / " + fmtInt(C.SALARY_CAP - total) : "incomplete";
+    var slots;
+    try { slots = C.assignSlots(players.map(function (p) { return { position: p.position }; })); } catch (e) { slots = []; }
+    for (var i = 0; i < 9; i++) $("slot-" + i).textContent = slots[i] || "";
+
+    var fieldRaw = $("field-n").value.trim();
+    var field = Number(fieldRaw);
+    var decay = C.parseNumber($("decay").value);
+    var corr = C.parseNumber($("corr-n").value);
+    var prizes = readPrizes();
+    try {
+      if (fieldRaw === "" || !Number.isInteger(field)) throw { isLineupError: true, code: "field", message: "Field size must be a whole number from 1 to 10,000,000." };
+      if (!isFinite(decay) || decay <= 0) throw { isLineupError: true, code: "decay", message: "Salary decay must be a positive number." };
+      var r = C.analyze(players, field, prizes, { decay: decay, corr: corr });
+      markInvalid(null);
+      state.lastResult = r; state.lastPlayers = players; state.lastPrizes = C.validatePrizes(prizes); state.fieldN = field;
+      setStatus("Lineup is legal. Salary " + fmtInt(r.total_salary) + " of " + fmtInt(C.SALARY_CAP) + ".", false);
+      render(r);
+      document.querySelector('section[aria-labelledby="out-h"]').style.opacity = "";
+    } catch (e) {
+      if (!e || !e.isLineupError) throw e;
+      markInvalid(e.code);
+      setStatus(e.message, true);
+      document.querySelector('section[aria-labelledby="out-h"]').style.opacity = "0.55";
+    }
+  }
+
+  function render(r) {
+    $("t-e").textContent = r.expected_dupes >= 0.01 || r.expected_dupes === 0 ? r.expected_dupes.toFixed(2) : fmtSci(r.expected_dupes);
+    $("t-u").textContent = fmtPct(r.p_unique);
+    $("t-pay").textContent = fmtMoney(r.expected_first_payout);
+    $("t-pay-s").textContent = (r.payout_ratio * 100).toFixed(1) + "% of the " + fmtMoney(r.solo_prize) + " solo prize, on average";
+    $("t-p").textContent = fmtSci(r.p);
+
+    var v = $("verdict"); v.textContent = "";
+    var chip = document.createElement("span");
+    if (r.p_unique >= 0.9) { chip.className = "status verdict good"; chip.textContent = "Likely unique"; }
+    else if (r.p_unique >= 0.5) { chip.className = "status verdict warn"; chip.textContent = "Some dupe risk"; }
+    else { chip.className = "status verdict bad"; chip.textContent = "Likely duplicated"; }
+    v.appendChild(chip);
+
+    var n = state.fieldN - 1;
+    var decayV = C.parseNumber($("decay").value);
+    var rows = [
+      ["p0 = product of 9 ownerships", fmtSci(r.p0)],
+      ["s  = exp(-" + fmtInt(Math.max(0, r.remaining)) + " / " + fmtInt(decayV) + ")", r.salary_factor.toFixed(4)],
+      ["c  = chalk correlation", r.corr.toFixed(2)],
+      ["p  = min(1, p0 x s x c)", fmtSci(r.p)],
+      ["E  = " + fmtInt(n) + " other entries x p", fmtSci(r.expected_dupes)],
+      ["P(unique) = (1 - p)^" + fmtInt(n), fmtSci(r.p_unique)]
+    ];
+    var w = Math.max.apply(null, rows.map(function (q) { return q[0].length; }));
+    $("chain").textContent = rows.map(function (q) { return q[0] + pad(w - q[0].length) + " = " + q[1]; }).join("\n");
+
+    drawChart(r.binomial);
+
+    var tb = $("dist-body"); tb.textContent = "";
+    for (var k = 0; k < r.binomial.length; k++) {
+      var tr = document.createElement("tr");
+      var last = k === r.binomial.length - 1;
+      var cells = [last ? k + "+" : String(k), fmtSci(r.binomial[k]), fmtSci(r.poisson[k]), last ? "at most " + fmtMoney(C.tieSplit(state.lastPrizes, k + 1)) : fmtMoney(C.tieSplit(state.lastPrizes, k + 1))];
+      cells.forEach(function (c, ci) { var td = document.createElement("td"); td.textContent = c; if (ci > 0) td.className = "num"; tr.appendChild(td); });
+      tb.appendChild(tr);
+    }
+    $("pois-note").textContent = "Largest gap between the binomial and Poisson columns: " + fmtSci(r.max_abs_diff) + ". Le Cam's bound on the total gap is (N - 1) p squared = " + fmtSci(n * r.p * r.p) + ".";
+  }
+  function pad(k) { return new Array(Math.max(0, k) + 1).join(" "); }
+
+  // ---- chart ----
+  function niceMax(x) {
+    if (!(x > 0)) return 1;
+    var steps = [1, 2, 2.5, 4, 5, 6, 8];
+    for (var e = -15; e <= 0; e++) for (var i = 0; i < steps.length; i++) { var v = steps[i] * Math.pow(10, e); if (v >= x * (1 - 1e-12)) return Math.min(1, v); }
+    return 1;
+  }
+  function el(tag, attrs) { var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function drawChart(vals) {
+    var svg = $("chart");
+    while (svg.lastChild && svg.lastChild.tagName !== "desc") svg.removeChild(svg.lastChild);
+    var W = 720, H = 260, L = 52, R = 12, T = 28, B = 34;
+    var pw = W - L - R, ph = H - T - B;
+    var mx = niceMax(Math.max.apply(null, vals));
+    var ticks = 4;
+    for (var t = 0; t <= ticks; t++) {
+      var val = mx * t / ticks, y = T + ph - ph * t / ticks;
+      svg.appendChild(el("line", { x1: L, x2: W - R, y1: y, y2: y, "class": t === 0 ? "axis" : "grid" }));
+      var tx = el("text", { x: L - 6, y: y + 4, "text-anchor": "end" }); tx.textContent = (val * 100).toFixed(mx < 0.05 ? 2 : (mx < 0.5 ? 1 : 0)) + "%"; svg.appendChild(tx);
+    }
+    var nb = vals.length, slot = pw / nb, bw = Math.min(44, slot - 8);
+    var imax = vals.indexOf(Math.max.apply(null, vals));
+    for (var k = 0; k < nb; k++) {
+      var cx = L + slot * k + slot / 2;
+      var h = mx > 0 ? ph * vals[k] / mx : 0;
+      var x = cx - bw / 2, y0 = T + ph;
+      if (h > 0.5) {
+        var r = Math.min(4, bw / 2, h);
+        var d = "M" + x + "," + y0 + " V" + (y0 - h + r) + " Q" + x + "," + (y0 - h) + " " + (x + r) + "," + (y0 - h) +
+                " H" + (x + bw - r) + " Q" + (x + bw) + "," + (y0 - h) + " " + (x + bw) + "," + (y0 - h + r) + " V" + y0 + " Z";
+        var path = el("path", { d: d, fill: "var(--chart-1)" }); path.setAttribute("data-k", k); path.setAttribute("class", "barp");
+        svg.appendChild(path);
+      }
+      var lab = el("text", { x: cx, y: H - B + 18, "text-anchor": "middle" }); lab.textContent = k === nb - 1 ? (k + "+") : String(k); svg.appendChild(lab);
+      if (k === imax || (vals[k] >= 0.02 && nb <= 11 && vals[k] / mx > 0.15)) {
+        var vt = el("text", { x: cx, y: y0 - h - 6, "text-anchor": "middle", "class": "val" });
+        vt.textContent = (vals[k] * 100).toFixed(vals[k] < 0.1 ? 1 : 0) + "%"; svg.appendChild(vt);
+      }
+      var hit = el("rect", { x: L + slot * k, y: T, width: slot, height: ph + 20, "class": "hit", tabindex: "0", role: "img" });
+      hit.setAttribute("aria-label", (k === nb - 1 ? k + " or more" : k) + " duplicates: " + fmtPct(vals[k]));
+      (function (kk, cxx) {
+        function show() { showTip(kk, cxx, vals[kk], nb); }
+        hit.addEventListener("pointermove", show);
+        hit.addEventListener("focus", show);
+        hit.addEventListener("pointerleave", hideTip);
+        hit.addEventListener("blur", hideTip);
+      })(k, cx);
+      svg.appendChild(hit);
+    }
+    var xl = el("text", { x: L + pw / 2, y: H - 2, "text-anchor": "middle" }); xl.textContent = "k other entries with your lineup"; svg.appendChild(xl);
+  }
+  function showTip(k, cx, v, nb) {
+    var tip = $("tip"); tip.textContent = "";
+    var b = document.createElement("b"); b.textContent = fmtPct(v);
+    var s = document.createElement("span"); s.textContent = (k === nb - 1 ? k + " or more" : k) + " duplicate" + (k === 1 ? "" : "s");
+    tip.appendChild(b); tip.appendChild(s);
+    tip.hidden = false;
+    var svg = $("chart"), box = $("chartbox");
+    var scale = svg.getBoundingClientRect().width / 720;
+    var left = cx * scale + svg.getBoundingClientRect().left - box.getBoundingClientRect().left + box.scrollLeft;
+    var tw = tip.offsetWidth;
+    left = Math.max(4, Math.min(left - tw / 2, box.scrollWidth - tw - 4));
+    tip.style.left = left + "px"; tip.style.top = "4px";
+    document.querySelectorAll("#chart .barp").forEach(function (p) { p.setAttribute("fill", p.getAttribute("data-k") === String(k) ? "var(--chart-2)" : "var(--chart-1)"); });
+  }
+  function hideTip() {
+    $("tip").hidden = true;
+    document.querySelectorAll("#chart .barp").forEach(function (p) { p.setAttribute("fill", "var(--chart-1)"); });
+  }
+
+  // ---- CSV copy ----
+  var csvCell = C.csvCell;
+  function resultsCsv() {
+    var r = state.lastResult; if (!r) return "";
+    var lines = [["slot", "name", "position", "ownership_pct", "salary"].join(",")];
+    state.lastPlayers.forEach(function (p, i) { lines.push([r.slots[i], p.name, p.position, p.ownership, p.salary].map(csvCell).join(",")); });
+    lines.push("");
+    lines.push("metric,value");
+    [["field_size", state.fieldN], ["total_salary", r.total_salary], ["remaining_salary", r.remaining], ["p0", r.p0], ["salary_factor", r.salary_factor], ["corr", r.corr], ["p", r.p], ["expected_dupes", r.expected_dupes], ["p_unique", r.p_unique], ["solo_prize", r.solo_prize], ["expected_first_payout", r.expected_first_payout]]
+      .forEach(function (row) { lines.push(row.map(csvCell).join(",")); });
+    lines.push("");
+    lines.push("k,binomial,poisson");
+    r.binomial.forEach(function (b, k) { lines.push([k === r.binomial.length - 1 ? k + "+" : k, b, r.poisson[k]].map(csvCell).join(",")); });
+    return lines.join("\n");
+  }
+  function copyCsv() {
+    var text = resultsCsv();
+    var msg = $("copy-msg");
+    function fallback() {
+      var wrap = $("fallback-wrap"), ta = $("csv-fallback");
+      ta.value = text; wrap.hidden = false; ta.focus(); ta.select();
+      msg.textContent = "";
+    }
+    if (!text) { msg.textContent = "Fix the lineup first; there are no results to copy."; return; }
+    try {
+      navigator.clipboard.writeText(text).then(function () { msg.textContent = "Copied."; $("fallback-wrap").hidden = true; }).catch(fallback);
+    } catch (e) { fallback(); }
+  }
+
+  // ---- file input ----
+  function onFile(ev) {
+    var f = ev.target.files && ev.target.files[0];
+    if (!f) return;
+    if (f.size > C.MAX_BYTES) { setStatus("That file is larger than 5 MB. Use a file with just the 9 lineup rows.", true); ev.target.value = ""; return; }
+    var reader = new FileReader();
+    reader.addEventListener("load", function () {
+      var text = String(reader.result || "").replace(/^\uFEFF/, "");
+      try {
+        var isJson = /\.json$/i.test(f.name) || /^\s*[\[{]/.test(text);
+        var data = isJson ? C.parseJsonText(text) : { players: C.parsePlayersText(text) };
+        if (data.players.length !== 9) throw { isLineupError: true, message: "The file has " + data.players.length + " player rows; a Classic lineup needs exactly 9." };
+        // Contest settings in the file must be readable; a bad value is reported, not silently skipped.
+        if (data.field_size !== undefined && !Number.isInteger(data.field_size)) throw { isLineupError: true, message: "field_size in the file must be a whole number (got " + String(JSON.stringify(data.field_size)).slice(0, 30) + ")." };
+        if (data.prizes !== undefined && !Array.isArray(data.prizes)) throw { isLineupError: true, message: "prizes in the file must be a list of amounts, 1st place first." };
+        if (data.decay !== undefined && typeof data.decay !== "number") throw { isLineupError: true, message: "decay in the file must be a number." };
+        if (data.corr !== undefined && typeof data.corr !== "number") throw { isLineupError: true, message: "corr in the file must be a number." };
+        setPlayers(data.players);
+        if (Number.isInteger(data.field_size)) $("field-n").value = String(data.field_size);
+        if (Array.isArray(data.prizes)) setPrizes(data.prizes.slice(0, PRIZE_BOXES).map(C.parseNumber));
+        if (typeof data.decay === "number") $("decay").value = String(data.decay);
+        if (typeof data.corr === "number") { $("corr-n").value = String(data.corr); $("corr-r").value = String(data.corr); }
+        $("ex-chalk").setAttribute("aria-pressed", "false");
+        $("ex-contrarian").setAttribute("aria-pressed", "false");
+        $("data-tag").textContent = "Loaded from your file";
+        if (data.field_size !== undefined || data.prizes !== undefined || data.decay !== undefined || data.corr !== undefined) saveContest();
+        recompute();
+      } catch (e) {
+        if (!e || !e.isLineupError) { setStatus("Could not read that file.", true); return; }
+        setStatus(e.message, true);
+      }
+    });
+    reader.addEventListener("error", function () { setStatus("Could not read that file.", true); });
+    reader.readAsText(f);
+    ev.target.value = "";
+  }
+
+  // ---- wire up ----
+  buildRows();
+  $("field-n").value = String(C.EXAMPLE_FIELD);
+  setPrizes(C.EXAMPLE_PRIZES);
+  $("decay").value = String(C.DEFAULT_DECAY);
+  $("corr-n").value = "1.0"; $("corr-r").value = "1.0";
+  // Field size and prizes belong to the contest the user plays, so the page asks once and
+  // remembers them on this device; the example lineups are only an example.
+  var CONTEST_IDS = ["field-n", "decay", "corr-n"];
+  for (var pj = 0; pj < PRIZE_BOXES; pj++) CONTEST_IDS.push("prize-" + pj);
+  (function restoreContest() {
+    var raw = recall("contest"), saved = null;
+    try { saved = raw ? JSON.parse(raw) : null; } catch (e) { saved = null; }
+    if (!saved || typeof saved !== "object") { $("contest-note").textContent = "Enter your contest's field size and top prizes once; this device remembers them."; return; }
+    CONTEST_IDS.forEach(function (id) { if (typeof saved[id] === "string" && saved[id].length < 20) $(id).value = saved[id]; });
+    $("corr-r").value = $("corr-n").value;
+    $("contest-note").textContent = "Field size and prizes are the ones you used last time on this device.";
+  })();
+  function saveContest() {
+    var o = {}; CONTEST_IDS.forEach(function (id) { o[id] = $(id).value; });
+    store("contest", JSON.stringify(o));
+  }
+  if (recall("adv") === "open") $("adv").open = true;
+
+  document.querySelector(".wrap").addEventListener("input", function (ev) {
+    var id = ev.target.id;
+    if (id === "file-in") return;
+    if (id === "corr-r") $("corr-n").value = ev.target.value;
+    if (id === "corr-n" && isFinite(C.parseNumber(ev.target.value))) $("corr-r").value = ev.target.value;
+    if (CONTEST_IDS.indexOf(id) >= 0 || id === "corr-r") saveContest();
+    if (/^(name|pos|own|sal)-/.test(id)) {
+      if ($("data-tag").textContent.indexOf("edited") < 0) $("data-tag").textContent += " (edited)";
+    }
+    recompute();
+  });
+  document.querySelector(".wrap").addEventListener("change", function (ev) { if (/^pos-/.test(ev.target.id)) recompute(); });
+  $("ex-chalk").addEventListener("click", function () { loadExample("chalk"); });
+  $("ex-contrarian").addEventListener("click", function () { loadExample("contrarian"); });
+  $("copy-csv").addEventListener("click", copyCsv);
+  $("file-in").addEventListener("change", onFile);
+  $("adv").addEventListener("toggle", function () { store("adv", $("adv").open ? "open" : "closed"); });
+
+  var startEx = recall("example");
+  loadExample(startEx === "contrarian" ? "contrarian" : "chalk");
+})();
+</script>
+</body>
+</html>

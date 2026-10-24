@@ -1,0 +1,2531 @@
+{
+ "tolerance_rel": 1e-09,
+ "tolerance_abs": 1e-15,
+ "cases": [
+  {
+   "label": "chalk c=1.0 d=1500.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Alpha",
+      "position": "QB",
+      "ownership": 18.0,
+      "salary": 6400
+     },
+     {
+      "name": "RB Bravo",
+      "position": "RB",
+      "ownership": 38.0,
+      "salary": 8600
+     },
+     {
+      "name": "RB Charlie",
+      "position": "RB",
+      "ownership": 26.0,
+      "salary": 6200
+     },
+     {
+      "name": "WR Delta",
+      "position": "WR",
+      "ownership": 31.0,
+      "salary": 7800
+     },
+     {
+      "name": "WR Echo",
+      "position": "WR",
+      "ownership": 24.0,
+      "salary": 5800
+     },
+     {
+      "name": "WR Foxtrot",
+      "position": "WR",
+      "ownership": 29.0,
+      "salary": 4600
+     },
+     {
+      "name": "TE Golf",
+      "position": "TE",
+      "ownership": 21.0,
+      "salary": 4300
+     },
+     {
+      "name": "RB Hotel",
+      "position": "RB",
+      "ownership": 35.0,
+      "salary": 3400
+     },
+     {
+      "name": "DST India",
+      "position": "DST",
+      "ownership": 16.0,
+      "salary": 2800
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 1500.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 49900.0,
+    "remaining": 100.0,
+    "p0": 4.51240118784001e-06,
+    "salary_factor": 0.9355069850316178,
+    "corr": 1.0,
+    "p": 4.2213828304892984e-06,
+    "expected_dupes": 0.6332032031905642,
+    "p_unique": 0.5308878211352843,
+    "binomial": [
+     0.5308878211352843,
+     0.33616128794321093,
+     0.10642894190171688,
+     0.022463510950323975,
+     0.0035559356628190437,
+     0.00045031586259036476,
+     4.752219091960879e-05,
+     4.29858955410142e-06,
+     3.402206428157734e-07,
+     2.393535784140409e-08,
+     1.6075807150024147e-09
+    ],
+    "poisson": [
+     0.5308885306675047,
+     0.33616031815579606,
+     0.10642889512090462,
+     0.022463705767529804,
+     0.003556022611882556,
+     0.00045033698169242247,
+     4.75258032204687e-05,
+     4.29907011905789e-06,
+     3.4027312126603723e-07,
+     2.3940225593922853e-08,
+     1.6080034473157304e-09
+    ],
+    "max_abs_diff": 9.69787414872858e-07,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 85735.8757532236,
+    "payout_ratio": 0.857358757532236,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "chalk c=1.0 d=600.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Alpha",
+      "position": "QB",
+      "ownership": 18.0,
+      "salary": 6400
+     },
+     {
+      "name": "RB Bravo",
+      "position": "RB",
+      "ownership": 38.0,
+      "salary": 8600
+     },
+     {
+      "name": "RB Charlie",
+      "position": "RB",
+      "ownership": 26.0,
+      "salary": 6200
+     },
+     {
+      "name": "WR Delta",
+      "position": "WR",
+      "ownership": 31.0,
+      "salary": 7800
+     },
+     {
+      "name": "WR Echo",
+      "position": "WR",
+      "ownership": 24.0,
+      "salary": 5800
+     },
+     {
+      "name": "WR Foxtrot",
+      "position": "WR",
+      "ownership": 29.0,
+      "salary": 4600
+     },
+     {
+      "name": "TE Golf",
+      "position": "TE",
+      "ownership": 21.0,
+      "salary": 4300
+     },
+     {
+      "name": "RB Hotel",
+      "position": "RB",
+      "ownership": 35.0,
+      "salary": 3400
+     },
+     {
+      "name": "DST India",
+      "position": "DST",
+      "ownership": 16.0,
+      "salary": 2800
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 600.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 49900.0,
+    "remaining": 100.0,
+    "p0": 4.51240118784001e-06,
+    "salary_factor": 0.8464817248906141,
+    "corr": 1.0,
+    "p": 3.819665140881268e-06,
+    "expected_dupes": 0.5729459514670493,
+    "p_unique": 0.5638612627924794,
+    "binomial": [
+     0.5638612627924794,
+     0.3230632616995284,
+     0.09254863043728043,
+     0.017674952883503053,
+     0.00253165721002523,
+     0.00029009392179267025,
+     2.7700538761466635e-05,
+     2.2671910450741235e-06,
+     1.6236528406893438e-07,
+     1.0335769558952959e-08,
+     6.245313268827096e-10
+    ],
+    "poisson": [
+     0.5638618797887709,
+     0.32306238121157627,
+     0.09254864169323856,
+     0.017675123190638537,
+     0.002531722568439426,
+     0.0002901080391650257,
+     2.7702704421274265e-05,
+     2.267450334693918e-06,
+     1.623908111769359e-07,
+     1.0337906424363946e-08,
+     6.246976896215792e-10
+    ],
+    "max_abs_diff": 8.804879521595588e-07,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 86966.4612261461,
+    "payout_ratio": 0.869664612261461,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "chalk c=2.5 d=1500.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Alpha",
+      "position": "QB",
+      "ownership": 18.0,
+      "salary": 6400
+     },
+     {
+      "name": "RB Bravo",
+      "position": "RB",
+      "ownership": 38.0,
+      "salary": 8600
+     },
+     {
+      "name": "RB Charlie",
+      "position": "RB",
+      "ownership": 26.0,
+      "salary": 6200
+     },
+     {
+      "name": "WR Delta",
+      "position": "WR",
+      "ownership": 31.0,
+      "salary": 7800
+     },
+     {
+      "name": "WR Echo",
+      "position": "WR",
+      "ownership": 24.0,
+      "salary": 5800
+     },
+     {
+      "name": "WR Foxtrot",
+      "position": "WR",
+      "ownership": 29.0,
+      "salary": 4600
+     },
+     {
+      "name": "TE Golf",
+      "position": "TE",
+      "ownership": 21.0,
+      "salary": 4300
+     },
+     {
+      "name": "RB Hotel",
+      "position": "RB",
+      "ownership": 35.0,
+      "salary": 3400
+     },
+     {
+      "name": "DST India",
+      "position": "DST",
+      "ownership": 16.0,
+      "salary": 2800
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 1500.0,
+    "corr": 2.5
+   },
+   "output": {
+    "total_salary": 49900.0,
+    "remaining": 100.0,
+    "p0": 4.51240118784001e-06,
+    "salary_factor": 0.9355069850316178,
+    "corr": 2.5,
+    "p": 1.0553457076223247e-05,
+    "expected_dupes": 1.5830080079764108,
+    "p_unique": 0.2053547390071619,
+    "binomial": [
+     0.2053547390071619,
+     0.3250816270592404,
+     0.2573044095239318,
+     0.13577126947691215,
+     0.05373124411694872,
+     0.017011123828995438,
+     0.0044880219666725745,
+     0.0010149093577071463,
+     0.00020081895245972065,
+     3.5320490000343205e-05,
+     6.516219969832093e-06
+    ],
+    "poisson": [
+     0.20535645437579056,
+     0.3250809117665189,
+     0.2573028432833362,
+     0.13577082046420688,
+     0.05373157401109176,
+     0.017011502388147096,
+     0.004488224084691116,
+     0.0010149849525226615,
+     0.00020084116347736616,
+     3.532590779066337e-05,
+     6.5176024268698285e-06
+    ],
+    "max_abs_diff": 1.715368628668612e-06,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 69296.416004227,
+    "payout_ratio": 0.6929641600422699,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "chalk c=2.5 d=600.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Alpha",
+      "position": "QB",
+      "ownership": 18.0,
+      "salary": 6400
+     },
+     {
+      "name": "RB Bravo",
+      "position": "RB",
+      "ownership": 38.0,
+      "salary": 8600
+     },
+     {
+      "name": "RB Charlie",
+      "position": "RB",
+      "ownership": 26.0,
+      "salary": 6200
+     },
+     {
+      "name": "WR Delta",
+      "position": "WR",
+      "ownership": 31.0,
+      "salary": 7800
+     },
+     {
+      "name": "WR Echo",
+      "position": "WR",
+      "ownership": 24.0,
+      "salary": 5800
+     },
+     {
+      "name": "WR Foxtrot",
+      "position": "WR",
+      "ownership": 29.0,
+      "salary": 4600
+     },
+     {
+      "name": "TE Golf",
+      "position": "TE",
+      "ownership": 21.0,
+      "salary": 4300
+     },
+     {
+      "name": "RB Hotel",
+      "position": "RB",
+      "ownership": 35.0,
+      "salary": 3400
+     },
+     {
+      "name": "DST India",
+      "position": "DST",
+      "ownership": 16.0,
+      "salary": 2800
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 600.0,
+    "corr": 2.5
+   },
+   "output": {
+    "total_salary": 49900.0,
+    "remaining": 100.0,
+    "p0": 4.51240118784001e-06,
+    "salary_factor": 0.8464817248906141,
+    "corr": 2.5,
+    "p": 9.54916285220317e-06,
+    "expected_dupes": 1.4323648786676233,
+    "p_unique": 0.23874202157802704,
+    "binomial": [
+     0.23874202157802704,
+     0.34196895228768975,
+     0.2449128643800442,
+     0.11693441924121535,
+     0.041872751187488996,
+     0.011995206299231731,
+     0.0028635172599426753,
+     0.0005859252361590083,
+     0.00010490344725643925,
+     1.6694826041665126e-05,
+     2.744256903164377e-06
+    ],
+    "poisson": [
+     0.2387436543370209,
+     0.34196802547711197,
+     0.24491149466036508,
+     0.11693420777783338,
+     0.041873113083947734,
+     0.011995515308384892,
+     0.0028636591382083893,
+     0.0005859721105778985,
+     0.00010491573388381533,
+     1.66975124927573e-05,
+     2.7448601731538957e-06
+    ],
+    "max_abs_diff": 1.6327589938691656e-06,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 71567.70533881304,
+    "payout_ratio": 0.7156770533881305,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "contrarian c=1.0 d=1500.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Juliet",
+      "position": "QB",
+      "ownership": 4.0,
+      "salary": 5600
+     },
+     {
+      "name": "RB Kilo",
+      "position": "RB",
+      "ownership": 9.0,
+      "salary": 7400
+     },
+     {
+      "name": "RB Lima",
+      "position": "RB",
+      "ownership": 3.5,
+      "salary": 5200
+     },
+     {
+      "name": "WR Mike",
+      "position": "WR",
+      "ownership": 6.0,
+      "salary": 7200
+     },
+     {
+      "name": "WR November",
+      "position": "WR",
+      "ownership": 2.5,
+      "salary": 6000
+     },
+     {
+      "name": "WR Oscar",
+      "position": "WR",
+      "ownership": 5.0,
+      "salary": 5000
+     },
+     {
+      "name": "TE Papa",
+      "position": "TE",
+      "ownership": 3.0,
+      "salary": 3800
+     },
+     {
+      "name": "WR Quebec",
+      "position": "WR",
+      "ownership": 7.5,
+      "salary": 5400
+     },
+     {
+      "name": "DST Romeo",
+      "position": "DST",
+      "ownership": 4.0,
+      "salary": 3200
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 1500.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 48800.0,
+    "remaining": 1200.0,
+    "p0": 8.505000000000002e-13,
+    "salary_factor": 0.44932896411722156,
+    "corr": 1.0,
+    "p": 3.82154283981697e-13,
+    "expected_dupes": 5.732276044297057e-08,
+    "p_unique": 0.9999999426772412,
+    "binomial": [
+     0.9999999426772412,
+     5.732275715709371e-08,
+     1.6429383851553537e-15,
+     3.1392169254324304e-23,
+     4.498624519989023e-31,
+     5.1573339801555227e-39,
+     4.927046096376465e-47,
+     4.034579796050449e-55,
+     2.890780728918278e-63,
+     1.841096593589836e-71,
+     1.0553040729010592e-79
+    ],
+    "poisson": [
+     0.9999999426772412,
+     5.732275715707172e-08,
+     1.6429493382227018e-15,
+     3.139279711162561e-23,
+     4.4988044711612e-31,
+     5.15767781960277e-39,
+     4.927538834918558e-47,
+     4.0351446886781886e-55,
+     2.891320404272804e-63,
+     1.841538521088935e-71,
+     1.0556207204098253e-79
+    ],
+    "max_abs_diff": 2.1989769404109688e-20,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 99999.998566931,
+    "payout_ratio": 0.9999999856693099,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "contrarian c=1.0 d=600.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Juliet",
+      "position": "QB",
+      "ownership": 4.0,
+      "salary": 5600
+     },
+     {
+      "name": "RB Kilo",
+      "position": "RB",
+      "ownership": 9.0,
+      "salary": 7400
+     },
+     {
+      "name": "RB Lima",
+      "position": "RB",
+      "ownership": 3.5,
+      "salary": 5200
+     },
+     {
+      "name": "WR Mike",
+      "position": "WR",
+      "ownership": 6.0,
+      "salary": 7200
+     },
+     {
+      "name": "WR November",
+      "position": "WR",
+      "ownership": 2.5,
+      "salary": 6000
+     },
+     {
+      "name": "WR Oscar",
+      "position": "WR",
+      "ownership": 5.0,
+      "salary": 5000
+     },
+     {
+      "name": "TE Papa",
+      "position": "TE",
+      "ownership": 3.0,
+      "salary": 3800
+     },
+     {
+      "name": "WR Quebec",
+      "position": "WR",
+      "ownership": 7.5,
+      "salary": 5400
+     },
+     {
+      "name": "DST Romeo",
+      "position": "DST",
+      "ownership": 4.0,
+      "salary": 3200
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 600.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 48800.0,
+    "remaining": 1200.0,
+    "p0": 8.505000000000002e-13,
+    "salary_factor": 0.1353352832366127,
+    "corr": 1.0,
+    "p": 1.1510265839273913e-13,
+    "expected_dupes": 1.7265283656252478e-08,
+    "p_unique": 0.9999999827347165,
+    "binomial": [
+     0.9999999827347165,
+     1.7265283358164448e-08,
+     1.4904401365215218e-16,
+     8.577509540822264e-25,
+     3.702254335101838e-33,
+     1.2783753341173266e-41,
+     3.6784628401162826e-50,
+     9.072451992641234e-59,
+     1.9578893408413232e-67,
+     3.7557457745598514e-76,
+     6.484012557341368e-85
+    ],
+    "poisson": [
+     0.9999999827347165,
+     1.7265283358162486e-08,
+     1.490450072921256e-16,
+     8.57768109482258e-25,
+     3.7024024303746416e-33,
+     1.2784605634003317e-41,
+     3.6788307117398494e-50,
+     9.073722251645878e-59,
+     1.9582548561589673e-67,
+     3.7566472847575723e-76,
+     6.485958106963162e-85
+    ],
+    "max_abs_diff": 1.9620724129757816e-21,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 99999.99956836787,
+    "payout_ratio": 0.9999999956836787,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "contrarian c=2.5 d=1500.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Juliet",
+      "position": "QB",
+      "ownership": 4.0,
+      "salary": 5600
+     },
+     {
+      "name": "RB Kilo",
+      "position": "RB",
+      "ownership": 9.0,
+      "salary": 7400
+     },
+     {
+      "name": "RB Lima",
+      "position": "RB",
+      "ownership": 3.5,
+      "salary": 5200
+     },
+     {
+      "name": "WR Mike",
+      "position": "WR",
+      "ownership": 6.0,
+      "salary": 7200
+     },
+     {
+      "name": "WR November",
+      "position": "WR",
+      "ownership": 2.5,
+      "salary": 6000
+     },
+     {
+      "name": "WR Oscar",
+      "position": "WR",
+      "ownership": 5.0,
+      "salary": 5000
+     },
+     {
+      "name": "TE Papa",
+      "position": "TE",
+      "ownership": 3.0,
+      "salary": 3800
+     },
+     {
+      "name": "WR Quebec",
+      "position": "WR",
+      "ownership": 7.5,
+      "salary": 5400
+     },
+     {
+      "name": "DST Romeo",
+      "position": "DST",
+      "ownership": 4.0,
+      "salary": 3200
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 1500.0,
+    "corr": 2.5
+   },
+   "output": {
+    "total_salary": 48800.0,
+    "remaining": 1200.0,
+    "p0": 8.505000000000002e-13,
+    "salary_factor": 0.44932896411722156,
+    "corr": 2.5,
+    "p": 9.553857099542426e-13,
+    "expected_dupes": 1.4330690110742642e-07,
+    "p_unique": 0.9999998566931092,
+    "binomial": [
+     0.9999998566931092,
+     1.4330688057069712e-07,
+     1.0268364024316231e-14,
+     4.905026024242119e-22,
+     1.7572750520269472e-29,
+     5.036458531954459e-37,
+     1.2028920099476464e-44,
+     2.462511870823196e-52,
+     4.4109809575961936e-60,
+     7.023225537468898e-68,
+     1.0064163116609332e-75
+    ],
+    "poisson": [
+     0.9999998566931092,
+     1.4330688057056016e-07,
+     1.0268432480969524e-14,
+     4.905124126928614e-22,
+     1.7573453454435142e-29,
+     5.036794312621404e-37,
+     1.2030123074288113e-44,
+     2.4628566538816676e-52,
+     4.4118044367448977e-60,
+     7.024911356910032e-68,
+     1.0067182902285676e-75
+    ],
+    "max_abs_diff": 1.3695463965917969e-19,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 99999.99641732755,
+    "payout_ratio": 0.9999999641732755,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "contrarian c=2.5 d=600.0",
+   "input": {
+    "players": [
+     {
+      "name": "QB Juliet",
+      "position": "QB",
+      "ownership": 4.0,
+      "salary": 5600
+     },
+     {
+      "name": "RB Kilo",
+      "position": "RB",
+      "ownership": 9.0,
+      "salary": 7400
+     },
+     {
+      "name": "RB Lima",
+      "position": "RB",
+      "ownership": 3.5,
+      "salary": 5200
+     },
+     {
+      "name": "WR Mike",
+      "position": "WR",
+      "ownership": 6.0,
+      "salary": 7200
+     },
+     {
+      "name": "WR November",
+      "position": "WR",
+      "ownership": 2.5,
+      "salary": 6000
+     },
+     {
+      "name": "WR Oscar",
+      "position": "WR",
+      "ownership": 5.0,
+      "salary": 5000
+     },
+     {
+      "name": "TE Papa",
+      "position": "TE",
+      "ownership": 3.0,
+      "salary": 3800
+     },
+     {
+      "name": "WR Quebec",
+      "position": "WR",
+      "ownership": 7.5,
+      "salary": 5400
+     },
+     {
+      "name": "DST Romeo",
+      "position": "DST",
+      "ownership": 4.0,
+      "salary": 3200
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 600.0,
+    "corr": 2.5
+   },
+   "output": {
+    "total_salary": 48800.0,
+    "remaining": 1200.0,
+    "p0": 8.505000000000002e-13,
+    "salary_factor": 0.1353352832366127,
+    "corr": 2.5,
+    "p": 2.8775664598184786e-13,
+    "expected_dupes": 4.31632091406312e-08,
+    "p_unique": 0.9999999568367918,
+    "binomial": [
+     0.9999999568367918,
+     4.3163207277581125e-08,
+     9.315250612017169e-16,
+     1.3402358310448684e-23,
+     1.4461930621967776e-31,
+     1.2484133798937492e-39,
+     8.98062193568272e-48,
+     5.537385106014949e-56,
+     2.9875019685955913e-64,
+     1.43270327655785e-72,
+     6.183636097617058e-81
+    ],
+    "poisson": [
+     0.9999999568367918,
+     4.3163207277568704e-08,
+     9.315312714510589e-16,
+     1.340262636356e-23,
+     1.4462509119101904e-31,
+     1.2484966116121607e-39,
+     8.981520059730862e-48,
+     5.538160410556287e-56,
+     2.9880597006900908e-64,
+     1.433047175395322e-72,
+     6.185491518269398e-81
+    ],
+    "max_abs_diff": 1.2420944078096264e-20,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 99999.99892091975,
+    "payout_ratio": 0.9999999892091975,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "small field",
+   "input": {
+    "players": [
+     {
+      "name": "QB Alpha",
+      "position": "QB",
+      "ownership": 18.0,
+      "salary": 6400
+     },
+     {
+      "name": "RB Bravo",
+      "position": "RB",
+      "ownership": 38.0,
+      "salary": 8600
+     },
+     {
+      "name": "RB Charlie",
+      "position": "RB",
+      "ownership": 26.0,
+      "salary": 6200
+     },
+     {
+      "name": "WR Delta",
+      "position": "WR",
+      "ownership": 31.0,
+      "salary": 7800
+     },
+     {
+      "name": "WR Echo",
+      "position": "WR",
+      "ownership": 24.0,
+      "salary": 5800
+     },
+     {
+      "name": "WR Foxtrot",
+      "position": "WR",
+      "ownership": 29.0,
+      "salary": 4600
+     },
+     {
+      "name": "TE Golf",
+      "position": "TE",
+      "ownership": 21.0,
+      "salary": 4300
+     },
+     {
+      "name": "RB Hotel",
+      "position": "RB",
+      "ownership": 35.0,
+      "salary": 3400
+     },
+     {
+      "name": "DST India",
+      "position": "DST",
+      "ownership": 16.0,
+      "salary": 2800
+     }
+    ],
+    "field_size": 20,
+    "prizes": [
+     500,
+     300,
+     100
+    ],
+    "decay": 1500.0,
+    "corr": 5.0
+   },
+   "output": {
+    "total_salary": 49900.0,
+    "remaining": 100.0,
+    "p0": 4.51240118784001e-06,
+    "salary_factor": 0.9355069850316178,
+    "corr": 5.0,
+    "p": 2.1106914152446494e-05,
+    "expected_dupes": 0.0004010313688964834,
+    "p_unique": 0.9995990448028047,
+    "binomial": [
+     0.9995990448028047,
+     0.0004008790346042543,
+     7.615348168516902e-08,
+     9.108593922896323e-12,
+     7.690334718437423e-16,
+     4.869679825083133e-20,
+     2.3983419486826546e-24,
+     9.401352277074454e-29,
+     2.9765658575568025e-33,
+     7.678910081096942e-38,
+     1.620843160384691e-42
+    ],
+    "poisson": [
+     0.9995990490334347,
+     0.0004008705749815011,
+     8.038083771757603e-08,
+     1.0745079127641842e-11,
+     1.0772784478648126e-15,
+     8.640449012598063e-20,
+     5.77515182567078e-24,
+     3.308595774619697e-28,
+     1.6585633657760733e-32,
+     7.390399299763727e-37,
+     2.963890003262595e-41
+    ],
+    "max_abs_diff": 8.459622753177742e-09,
+    "solo_prize": 500.0,
+    "expected_first_payout": 499.9598968635659,
+    "payout_ratio": 0.9999197937271318,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "single entry",
+   "input": {
+    "players": [
+     {
+      "name": "QB Alpha",
+      "position": "QB",
+      "ownership": 18.0,
+      "salary": 6400
+     },
+     {
+      "name": "RB Bravo",
+      "position": "RB",
+      "ownership": 38.0,
+      "salary": 8600
+     },
+     {
+      "name": "RB Charlie",
+      "position": "RB",
+      "ownership": 26.0,
+      "salary": 6200
+     },
+     {
+      "name": "WR Delta",
+      "position": "WR",
+      "ownership": 31.0,
+      "salary": 7800
+     },
+     {
+      "name": "WR Echo",
+      "position": "WR",
+      "ownership": 24.0,
+      "salary": 5800
+     },
+     {
+      "name": "WR Foxtrot",
+      "position": "WR",
+      "ownership": 29.0,
+      "salary": 4600
+     },
+     {
+      "name": "TE Golf",
+      "position": "TE",
+      "ownership": 21.0,
+      "salary": 4300
+     },
+     {
+      "name": "RB Hotel",
+      "position": "RB",
+      "ownership": 35.0,
+      "salary": 3400
+     },
+     {
+      "name": "DST India",
+      "position": "DST",
+      "ownership": 16.0,
+      "salary": 2800
+     }
+    ],
+    "field_size": 1,
+    "prizes": [
+     100
+    ],
+    "decay": 1500.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 49900.0,
+    "remaining": 100.0,
+    "p0": 4.51240118784001e-06,
+    "salary_factor": 0.9355069850316178,
+    "corr": 1.0,
+    "p": 4.2213828304892984e-06,
+    "expected_dupes": 0.0,
+    "p_unique": 1.0,
+    "binomial": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "poisson": [
+     1.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "max_abs_diff": 0.0,
+    "solo_prize": 100.0,
+    "expected_first_payout": 100.0,
+    "payout_ratio": 1.0,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "all 100",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 100.0,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 100.0,
+      "salary": 5552
+     }
+    ],
+    "field_size": 1000,
+    "prizes": [
+     100,
+     50,
+     25
+    ],
+    "decay": 1500.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 50000.0,
+    "remaining": 0.0,
+    "p0": 1.0,
+    "salary_factor": 1.0,
+    "corr": 1.0,
+    "p": 1.0,
+    "expected_dupes": 999.0,
+    "p_unique": 0.0,
+    "binomial": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "poisson": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "max_abs_diff": 0.0,
+    "solo_prize": 100.0,
+    "expected_first_payout": 25.1,
+    "payout_ratio": 0.251,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "tiny own",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 0.01,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 0.01,
+      "salary": 5552
+     }
+    ],
+    "field_size": 150000,
+    "prizes": [
+     100,
+     50
+    ],
+    "decay": 1500.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 50000.0,
+    "remaining": 0.0,
+    "p0": 1.0000000000000028e-36,
+    "salary_factor": 1.0,
+    "corr": 1.0,
+    "p": 1.0000000000000028e-36,
+    "expected_dupes": 1.4999900000000042e-31,
+    "p_unique": 1.0,
+    "binomial": [
+     1.0,
+     1.4999900000000103e-31,
+     1.124977500099989e-62,
+     5.624775002749951e-94,
+     2.109234378281188e-125,
+     6.327492211405545e-157,
+     1.5818097779292765e-188,
+     3.3894342002992437e-220,
+     6.354850182141158e-252,
+     1.0590781485216498e-283,
+     1.588511317e-315
+    ],
+    "poisson": [
+     1.0,
+     1.4999900000000103e-31,
+     1.1249850000500133e-62,
+     5.624887500750038e-94,
+     2.1093187505625486e-125,
+     6.327914065312841e-157,
+     1.581967969804802e-188,
+     3.3899087643251443e-220,
+     6.356036559249829e-252,
+     1.0593323642788218e-283,
+     1.58898795e-315
+    ],
+    "max_abs_diff": 7.499950024177735e-68,
+    "solo_prize": 100.0,
+    "expected_first_payout": 100.0,
+    "payout_ratio": 1.0,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "high own",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 90.0,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 90.0,
+      "salary": 5552
+     }
+    ],
+    "field_size": 10000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 1500.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 50000.0,
+    "remaining": 0.0,
+    "p0": 0.387420489,
+    "salary_factor": 1.0,
+    "corr": 1.0,
+    "p": 0.387420489,
+    "expected_dupes": 3873.8174695109997,
+    "p_unique": 0.0,
+    "binomial": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "poisson": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "max_abs_diff": 0.0,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 10038.717621875698,
+    "payout_ratio": 0.10038717621875698,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "salary left",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 20.0,
+      "salary": 5000
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 20.0,
+      "salary": 5000
+     }
+    ],
+    "field_size": 500000,
+    "prizes": [
+     100000.0,
+     50000.0,
+     25000.0,
+     15000.0,
+     10000.0
+    ],
+    "decay": 1500.0,
+    "corr": 1.0
+   },
+   "output": {
+    "total_salary": 45000.0,
+    "remaining": 5000.0,
+    "p0": 5.120000000000017e-07,
+    "salary_factor": 0.035673993347252395,
+    "corr": 1.0,
+    "p": 1.826508459379329e-08,
+    "expected_dupes": 0.00913252403181205,
+    "p_unique": 0.990909050725803,
+    "binomial": [
+     0.990909050725803,
+     0.009049500884383367,
+     4.1322310261073616e-05,
+     1.2579182963035303e-07,
+     2.8719750882308104e-10,
+     5.245634432724279e-13,
+     7.984234055694683e-16,
+     1.0416476532112306e-18,
+     1.189092402363204e-21,
+     1.2065823764428326e-24,
+     1.1028099441782548e-27
+    ],
+    "poisson": [
+     0.990909050808448,
+     0.009049500719848223,
+     4.1322391399957206e-05,
+     1.2579257750401747e-07,
+     2.8720093426975485e-10,
+     5.245738868354822e-13,
+     7.984472713310166e-16,
+     1.0416912705093255e-18,
+     1.1891588202069032e-21,
+     1.2066690559089802e-24,
+     1.1029090193223748e-27
+    ],
+    "max_abs_diff": 1.6453514418979243e-10,
+    "solo_prize": 100000.0,
+    "expected_first_payout": 99772.03409362579,
+    "payout_ratio": 0.9977203409362578,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  },
+  {
+   "label": "te flex",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "TE",
+      "ownership": 25.0,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 25.0,
+      "salary": 5552
+     }
+    ],
+    "field_size": 50000,
+    "prizes": [
+     1000,
+     500
+    ],
+    "decay": 1500.0,
+    "corr": 0.5
+   },
+   "output": {
+    "total_salary": 50000.0,
+    "remaining": 0.0,
+    "p0": 3.814697265625001e-06,
+    "salary_factor": 1.0,
+    "corr": 0.5,
+    "p": 1.9073486328125004e-06,
+    "expected_dupes": 0.09536552429199222,
+    "p_unique": 0.9090405146373466,
+    "binomial": [
+     0.9090405146373466,
+     0.08669129063156764,
+     0.004133605400283736,
+     0.00013139614320527117,
+     3.1324835327266997e-06,
+     5.974152104426445e-08,
+     9.49453767080165e-10,
+     1.2933494761903464e-11,
+     1.5415489754110787e-13,
+     1.633193160526688e-15,
+     1.570831711776622e-17
+    ],
+    "poisson": [
+     0.909040597312555,
+     0.08669113316541756,
+     0.004133672682893479,
+     0.00013140328755187428,
+     3.132835852768975e-06,
+     5.97529067240128e-08,
+     9.49727879617665e-10,
+     1.2938756739208641e-11,
+     1.5423891501514765e-13,
+     1.634341666294172e-15,
+     1.5722190916341924e-17
+    ],
+    "max_abs_diff": 1.5746615007750098e-07,
+    "solo_prize": 1000.0,
+    "expected_first_payout": 976.8987570232948,
+    "payout_ratio": 0.9768987570232949,
+    "slots": [
+     "QB",
+     "RB",
+     "RB",
+     "WR",
+     "WR",
+     "WR",
+     "TE",
+     "FLEX",
+     "DST"
+    ]
+   }
+  }
+ ],
+ "errors": [
+  {
+   "code": "count",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     }
+    ],
+    "field_size": 100
+   }
+  },
+  {
+   "code": "position",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "QB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 10.0,
+      "salary": 5552
+     }
+    ],
+    "field_size": 100
+   }
+  },
+  {
+   "code": "cap",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5600
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 10.0,
+      "salary": 5600
+     }
+    ],
+    "field_size": 100
+   }
+  },
+  {
+   "code": "ownership",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 0.0,
+      "salary": 5552
+     }
+    ],
+    "field_size": 100
+   }
+  },
+  {
+   "code": "ownership",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 101.0,
+      "salary": 5552
+     }
+    ],
+    "field_size": 100
+   }
+  },
+  {
+   "code": "field",
+   "input": {
+    "players": [
+     {
+      "name": "P0",
+      "position": "QB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P1",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P2",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P3",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P4",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P5",
+      "position": "WR",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P6",
+      "position": "TE",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P7",
+      "position": "RB",
+      "ownership": 10.0,
+      "salary": 5556
+     },
+     {
+      "name": "P8",
+      "position": "DST",
+      "ownership": 10.0,
+      "salary": 5552
+     }
+    ],
+    "field_size": 0
+   }
+  }
+ ],
+ "primitives": {
+  "base_probability": [
+   {
+    "in": [
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10,
+     10
+    ],
+    "out": 1.0000000000000007e-09
+   },
+   {
+    "in": [
+     18,
+     38,
+     26,
+     31,
+     24,
+     29,
+     21,
+     35,
+     16
+    ],
+    "out": 4.51240118784001e-06
+   },
+   {
+    "in": [
+     0.5,
+     0.5,
+     0.5,
+     0.5,
+     0.5,
+     0.5,
+     0.5,
+     0.5,
+     0.5
+    ],
+    "out": 1.9531250000000118e-21
+   }
+  ],
+  "salary_factor": [
+   {
+    "in": [
+     0,
+     1500
+    ],
+    "out": 1.0
+   },
+   {
+    "in": [
+     100,
+     1500
+    ],
+    "out": 0.9355069850316178
+   },
+   {
+    "in": [
+     1500,
+     1500
+    ],
+    "out": 0.36787944117144233
+   },
+   {
+    "in": [
+     3200,
+     1500
+    ],
+    "out": 0.1184418290138037
+   },
+   {
+    "in": [
+     500,
+     300
+    ],
+    "out": 0.18887560283756183
+   }
+  ],
+  "binomial": [
+   {
+    "in": [
+     10,
+     0.3,
+     12
+    ],
+    "out": [
+     0.028247524900000005,
+     0.12106082100000001,
+     0.2334744405,
+     0.2668279319999999,
+     0.20012094899999985,
+     0.10291934519999993,
+     0.03675690899999997,
+     0.009001691999999986,
+     0.0014467004999999982,
+     0.0001377809999999999,
+     5.904899999999995e-06,
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "in": [
+     149999,
+     4.2e-06,
+     12
+    ],
+    "out": [
+     0.5325933332784374,
+     0.33553297231189955,
+     0.10569192094583262,
+     0.022194952711358257,
+     0.0034956265148688983,
+     0.0004404361090737771,
+     4.6244135846459014e-05,
+     4.161795480351772e-06,
+     3.277252909829065e-07,
+     2.2939490268440456e-08,
+     1.4450976104625832e-09,
+     8.275895950415917e-11,
+     4.344516033305783e-12
+    ]
+   },
+   {
+    "in": [
+     200,
+     0.05,
+     12
+    ],
+    "out": [
+     3.5052666248828984e-05,
+     0.0003689754341981998,
+     0.0019322660896168883,
+     0.006712082206037611,
+     0.017398423613018545,
+     0.03589569503317509,
+     0.06140053097779951,
+     0.08956167676460983,
+     0.11371976062874806,
+     0.12768534526736622,
+     0.12835737340035236,
+     0.11668852127304762,
+     0.09672864263423687
+    ]
+   }
+  ],
+  "poisson": [
+   {
+    "in": [
+     0.05,
+     12
+    ],
+    "out": [
+     0.951229424500714,
+     0.04756147122503571,
+     0.001189036780625893,
+     1.981727967709824e-05,
+     2.4771599596372807e-07,
+     2.477159959637284e-09,
+     2.0642999663644057e-11,
+     1.4744999759745787e-13,
+     9.215624849841136e-16,
+     5.119791583245067e-18,
+     2.559895791622523e-20,
+     1.1635889961920544e-22,
+     4.848287484133555e-25
+    ]
+   },
+   {
+    "in": [
+     0.63,
+     12
+    ],
+    "out": [
+     0.5325918010068972,
+     0.33553283463434525,
+     0.10569284290981873,
+     0.022195497011061934,
+     0.0034957907792422553,
+     0.00044046963818452424,
+     4.624931200937508e-05,
+     4.1624380808437585e-06,
+     3.27791998866446e-07,
+     2.2945439920651213e-08,
+     1.4455627150010279e-09,
+     8.279131913187707e-11,
+     4.346544254423549e-12
+    ]
+   },
+   {
+    "in": [
+     4.0,
+     12
+    ],
+    "out": [
+     0.01831563888873418,
+     0.07326255555493673,
+     0.14652511110987348,
+     0.19536681481316462,
+     0.19536681481316462,
+     0.1562934518505317,
+     0.1041956345670211,
+     0.05954036260972635,
+     0.029770181304863173,
+     0.013231191691050293,
+     0.005292476676420117,
+     0.001924536973243679,
+     0.0006415123244145595
+    ]
+   }
+  ],
+  "tie_split": [
+   {
+    "in": [
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ],
+     1
+    ],
+    "out": 100000.0
+   },
+   {
+    "in": [
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ],
+     2
+    ],
+    "out": 75000.0
+   },
+   {
+    "in": [
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ],
+     3
+    ],
+    "out": 58333.333333333336
+   },
+   {
+    "in": [
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ],
+     5
+    ],
+    "out": 40000.0
+   },
+   {
+    "in": [
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ],
+     8
+    ],
+    "out": 28750.0
+   }
+  ],
+  "expected_first_payout": [
+   {
+    "in": [
+     1,
+     0.5,
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ]
+    ],
+    "out": 87500.0
+   },
+   {
+    "in": [
+     149999,
+     4.22e-06,
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ]
+    ],
+    "out": 85740.06914471292
+   },
+   {
+    "in": [
+     149999,
+     3e-05,
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ]
+    ],
+    "out": 41609.18109942958
+   },
+   {
+    "in": [
+     12,
+     0.4,
+     [
+      100000.0,
+      50000.0,
+      25000.0,
+      15000.0,
+      10000.0
+     ]
+    ],
+    "out": 38397.30877046153
+   }
+  ]
+ }
+}
